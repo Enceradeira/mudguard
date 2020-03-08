@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Jorg Jenni"]
   spec.email         = ["jorg.jenni@jennius.co.uk"]
 
-  spec.summary       = "mudguard helps with your ruby project not becoming a "\
+  spec.summary       = "mudguard helps your ruby project not becoming a "\
                        "'Big ball of mud'"
   spec.homepage      = "https://gibhub.com/Enceradeira/mudguard"
   spec.license       = "MIT"
@@ -33,4 +33,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "rubocop"
+  spec.add_development_dependency "guard"
+  spec.add_development_dependency "guard-rspec"
 end
