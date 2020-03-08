@@ -1,0 +1,24 @@
+AllCops:
+  Exclude:
+    - 'bin/*'
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*.rb'
+    - 'lib/tasks/**/*.rake'
+
+Style/Documentation:
+  Exclude:
+    - 'spec/**/*.rb'
+
+Style/HashEachMethods:
+    Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
