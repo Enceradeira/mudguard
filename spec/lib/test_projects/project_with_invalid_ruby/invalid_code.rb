@@ -1,0 +1,3 @@
+class InvalidCode
+  def
+end

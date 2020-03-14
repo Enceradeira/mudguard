@@ -1,6 +1,7 @@
 AllCops:
   Exclude:
     - 'bin/*'
+    - 'spec/lib/test_projects/**/*.rb'
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
@@ -9,6 +10,7 @@ Metrics/BlockLength:
   Exclude:
     - 'spec/**/*.rb'
     - 'lib/tasks/**/*.rake'
+    - 'mudguard.gemspec'
 
 Style/Documentation:
   Exclude:
@@ -22,3 +24,7 @@ Style/HashTransformKeys:
 
 Style/HashTransformValues:
   Enabled: true
+
+Layout/LineLength:
+  Description: 'Limit lines to 100 characters.'
+  Max: 100

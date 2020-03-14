@@ -2,12 +2,13 @@
 
 rspec_options = {
   cmd: "rspec",
-  notification: false
+  notification: false,
+  failed_mode: :focus
 }
 
 guard "rspec", rspec_options do
   watch(%r{^spec/.+_spec\.rb$})
-  watch(%r{^lib/(.+)\.rb$}) { |m| "spec/lib/#{m[1]}_spec.rb" }
-  watch(%r{^lib/(.+)\.rb$}) { |m| Dir.glob("spec/lib/#{m[1]}_*.rb") }
+  watch(%r{^lib/mudguard/(.+)\.rb$}) { |m| "spec/lib/#{m[1]}_spec.rb" }
+  watch(%r{^lib/mudguard/(.+)\.rb$}) { |m| Dir.glob("spec/lib/#{m[1]}_*.rb") }
   watch("spec/spec_helper.rb") { "spec" }
 end
