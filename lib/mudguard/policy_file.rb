@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "policies"
+require_relative "error"
 
 module Mudguard
   # A file containing the Mudguard-Policies
