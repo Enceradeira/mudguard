@@ -2,7 +2,6 @@
 
 require "mudguard/version"
 require_relative "mudguard/policy_file"
-require_relative "mudguard/policies"
 require_relative "mudguard/ruby_files"
 
 # Contains methods to check if your project is a bit muddy

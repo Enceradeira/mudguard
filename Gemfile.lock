@@ -1,8 +1,8 @@
 PATH
   remote: .
   specs:
-    mudguard (0.1.0)
-      parser
+    mudguard (0.1.1)
+      parser (~> 2.7)
 
 GEM
   remote: https://rubygems.org/
@@ -87,15 +87,15 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 2.0)
-  guard
-  guard-rspec
+  guard (~> 2.1)
+  guard-rspec (~> 4.7)
   mudguard!
-  pry
-  pry-byebug
-  pry-doc
-  rake
-  rspec (~> 3.0)
-  rubocop
+  pry (~> 0.12)
+  pry-byebug (~> 3.7)
+  pry-doc (~> 1.0)
+  rake (~> 13.0)
+  rspec (~> 3.9)
+  rubocop (~> 0.80)
 
 BUNDLED WITH
    2.1.4
