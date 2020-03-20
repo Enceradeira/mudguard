@@ -13,3 +13,6 @@
 # Ignore RSpec Working Dir
 /.rspec
 .rspec_status
+
+# Ignore pkg (gem dir)
+/pkg
