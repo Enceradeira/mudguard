@@ -2,7 +2,7 @@
 
 require "spec_helper"
 require "mudguard/error"
-require_relative "test_projects/test_projects"
+require_relative "../test_projects/test_projects"
 
 module Mudguard
   RSpec.describe Mudguard do

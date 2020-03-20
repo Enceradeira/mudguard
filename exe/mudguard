@@ -1,5 +1,20 @@
 #!/usr/bin/env ruby
-require "mudguard"
+# frozen_string_literal: true
 
-Mudguard.check("")
-puts "OK"
+require "mudguard"
+require "optparse"
+
+# Checks the dependencies of a ruby project
+module Mudguard
+  parser = OptionParser.new do |opts|
+    opts.banner = "Usage: mudguard [options] [directory]"
+    opts.on("-h", "--help", "Prints this help") do
+      puts opts
+      exit
+    end
+  end
+
+  directories = parser.parse!
+  ok = directories.all?(&Mudguard.method(:check))
+  exit(ok ? 0 : 1)
+end

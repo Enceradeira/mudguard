@@ -3,7 +3,7 @@
 require "spec_helper"
 require "mudguard/error"
 require "mudguard/ruby_files"
-require_relative "test_projects/test_projects"
+require_relative "../test_projects/test_projects"
 
 module Mudguard
   RSpec.describe RubyFiles do
