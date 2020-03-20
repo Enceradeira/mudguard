@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "mudguard/error"
+require "mudguard/domain/error"
 require_relative "../test_projects/test_projects"
 
 module Mudguard
@@ -25,7 +25,7 @@ module Mudguard
 
       context "when MudguardFile missing" do
         let(:project) { TestProjects::PATH_TO_EMPTY_DIR }
-        it { expect { mudguard.check(project) }.to raise_error(Error) }
+        it { expect { mudguard.check(project) }.to raise_error(Mudguard::Domain::Error) }
       end
 
       context "when project can't be parsed" do
