@@ -22,32 +22,13 @@ module Mudguard
         let(:project_dir) { TestProjects::PATH_TO_CLEAN_PROJECT }
         it { expect(exit_code).to be_success }
       end
-
-      context "without any arguments" do
-        let(:args) { "" }
-        it { expect(exit_code).to be_success }
-      end
     end
 
     context "when help is requested" do
-      shared_examples "help writter" do
-        it { expect(std_out).to match(/^Usage:.*/) }
-        it { expect(exit_code).to be_success }
-      end
-
       context "with -h" do
         let(:args) { "-h" }
-        it_behaves_like "help writter"
-      end
-
-      context "with --help" do
-        let(:args) { "--help" }
-        it_behaves_like "help writter"
-      end
-
-      context "with --help ./project" do
-        let(:args) { "--help" }
-        it_behaves_like "help writter"
+        it { expect(std_out).to match(/^Usage:.*/) }
+        it { expect(exit_code).to be_success }
       end
     end
   end
