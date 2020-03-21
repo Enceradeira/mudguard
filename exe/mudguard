@@ -1,13 +1,13 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "mudguard/cli/view"
-require "mudguard/cli/option_parser"
+require "mudguard/infrastructure/cli/view"
+require "mudguard/infrastructure/cli/controller"
 
 # Checks the dependencies of a ruby project
 module Mudguard
-  view = Mudguard::Cli::View.new
-  parser = Mudguard::Cli::OptionParser.new(view: view)
+  view = Mudguard::Infrastructure::Cli::View.new
+  parser = Mudguard::Infrastructure::Cli::Controller.new(view: view)
   ok = parser.parse!(ARGV)
   exit(ok ? 0 : 1)
 end
