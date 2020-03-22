@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 require "optparse"
-require "mudguard/application/mudguard"
+require "mudguard/application/application"
+require_relative "notification_adapter"
 
 module Mudguard
   module Infrastructure
@@ -25,8 +26,9 @@ module Mudguard
 
           return true if @done
 
+          notification = NotificationAdapter.new(view: @view)
           directories = [Dir.pwd] if directories.empty?
-          directories.any? && directories.all?(&Mudguard::Application.method(:check))
+          directories.all? { |d| Mudguard::Application.check(d, notification) }
         end
       end
     end

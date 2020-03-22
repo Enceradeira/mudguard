@@ -6,11 +6,13 @@ require_relative "../../test_projects/test_projects"
 
 module Mudguard
   module Application
-    RSpec.describe Mudguard do
+    RSpec.describe Mudguard::Application do
       subject(:mudguard) { Mudguard::Application }
 
       describe "#check" do
-        subject(:result) { mudguard.check(project) }
+        subject(:result) { mudguard.check(project, notification) }
+        let(:notification) { double("notification") }
+        before { allow(notification).to receive(:add) }
         context "when it's muddy" do
           let(:project) { TestProjects::PATH_TO_MUDDY_PROJECT }
           it { is_expected.to be_falsey }
@@ -23,7 +25,9 @@ module Mudguard
 
         context "when MudguardFile missing" do
           let(:project) { TestProjects::PATH_TO_EMPTY_DIR }
-          it { expect { mudguard.check(project) }.to raise_error(Mudguard::Domain::Error) }
+          it "raises error " do
+            expect { mudguard.check(project, notification) }.to raise_error(Mudguard::Domain::Error)
+          end
         end
 
         context "when project can't be parsed" do

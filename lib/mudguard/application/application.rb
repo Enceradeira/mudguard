@@ -8,13 +8,13 @@ module Mudguard
   # API to mudguard
   module Application
     class << self
-      def check(project_path)
+      def check(project_path, notification)
         policy_file_path = File.expand_path("MudguardFile", project_path)
         policies = Infrastructure::Persistence::PolicyFile.read(policy_file_path)
 
         files = Infrastructure::Persistence::RubyFiles.all(project_path).map { |f| File.read(f) }
 
-        policies.check(files)
+        policies.check(files, notification)
       end
     end
   end
