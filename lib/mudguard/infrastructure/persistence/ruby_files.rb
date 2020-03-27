@@ -15,9 +15,18 @@ module Mudguard
               raise Mudguard::Domain::Error, "expected project #{project_path} doesn't exists"
             end
 
+            enumerate_files(project_path)
+          end
+
+          private
+
+          def enumerate_files(project_path)
+            project_path_name = Pathname.new(project_path)
             ruby_files = File.join(project_path, "**", "*.rb")
             Dir.glob(ruby_files).map do |f|
-              Mudguard::Domain::Source.new(location: f, code: File.read(f))
+              file_path_name = Pathname.new(f)
+              diff_path = file_path_name.relative_path_from(project_path_name).to_s
+              Mudguard::Domain::Source.new(location: File.join("./", diff_path), code: File.read(f))
             end.lazy
           end
         end

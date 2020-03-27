@@ -30,12 +30,18 @@ module Mudguard
         sources.each_with_object(count: 0, violations: 0) do |source, result|
           result[:count] += 1
           dependencies = source.find_mod_dependencies
-          result[:violations] += check_dependencies(dependencies)
+          result[:violations] += check_dependencies(dependencies, notification)
         end
       end
 
-      def check_dependencies(dependencies)
-        dependencies.reject { |d| @policies.any? { |p| d.match(p) } }.count
+      def check_dependencies(dependencies, notification)
+        dependencies.reject { |d| check_dependency(d, notification) }.count
+      end
+
+      def check_dependency(dependency, notification)
+        is_allowed = @policies.any? { |p| dependency.match(p) }
+        notification.add("#{dependency} not allowed") unless is_allowed
+        is_allowed
       end
     end
   end

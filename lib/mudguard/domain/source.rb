@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 require "parser/current"
+require "mudguard/domain/dependency"
 
 module Mudguard
   module Domain
     # Represents a Ruby source file
     class Source
       def initialize(location: nil, code:)
-
         @code = code
         @location = location
       end
@@ -16,8 +16,8 @@ module Mudguard
         @code == other.instance_eval { @code } && @location == other.instance_eval { @location }
       end
 
-      def to_s
-        location
+      def inspect
+        @location
       end
 
       def find_mod_dependencies
@@ -40,10 +40,16 @@ module Mudguard
         when type?(:class)
           process_class(node.children, module_name)
         when type?(:const)
-          ["#{module_name}->#{find_const_name(node.children)}"]
+          [create_dependency(module_name, node)]
         else
           ignore_and_continue(node, module_name)
         end
+      end
+
+      def create_dependency(module_name, node)
+        dependency = "#{module_name}->#{find_const_name(node.children)}"
+        location = "#{@location}:#{node.location.line}"
+        Dependency.new(location: location, dependency: dependency)
       end
 
       def ignore_and_continue(node, module_name)

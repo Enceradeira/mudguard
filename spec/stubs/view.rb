@@ -2,14 +2,14 @@
 
 module Mudguard
   module Stubs
-    class Notification
+    class View
       attr_reader :messages
 
       def initialize
         @messages = []
       end
 
-      def add(message)
+      def print(message)
         @messages << message
       end
     end

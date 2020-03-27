@@ -3,6 +3,7 @@
 require "spec_helper"
 
 require "mudguard/domain/source"
+require "mudguard/domain/dependency"
 
 module Mudguard
   module Domain
@@ -26,7 +27,10 @@ module Mudguard
 
         context "when ruby has dependencies" do
           let(:code) { "module A;b=B::C;end" }
-          it { is_expected.to match_array(["A->B::C"]) }
+          it "returns dependencies" do
+            dependency_on_line1 = Dependency.new(location: "test.rb:1", dependency: "A->B::C")
+            is_expected.to match_array([dependency_on_line1])
+          end
         end
 
         context "when ruby contains declaration without module" do
