@@ -12,9 +12,7 @@ module Mudguard
         policy_file_path = File.expand_path("MudguardFile", project_path)
         policies = Infrastructure::Persistence::PolicyFile.read(policy_file_path)
 
-        files = Infrastructure::Persistence::RubyFiles.all(project_path).map { |f| File.read(f) }
-
-        policies.check(files, notification)
+        policies.check(Infrastructure::Persistence::RubyFiles.all(project_path), notification)
       end
     end
   end

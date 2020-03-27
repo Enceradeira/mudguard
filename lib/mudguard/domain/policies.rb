@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "ruby_analyser"
-
 module Mudguard
   module Domain
     # Contains the policies to be enforced
@@ -31,7 +29,7 @@ module Mudguard
       def check_sources(sources, notification)
         sources.each_with_object(count: 0, violations: 0) do |source, result|
           result[:count] += 1
-          dependencies = RubyAnalyser.find_mod_dependencies(source)
+          dependencies = source.find_mod_dependencies
           result[:violations] += check_dependencies(dependencies)
         end
       end

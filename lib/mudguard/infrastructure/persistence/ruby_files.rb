@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "mudguard/domain/source"
+
 module Mudguard
   module Infrastructure
     module Persistence
@@ -14,7 +16,9 @@ module Mudguard
             end
 
             ruby_files = File.join(project_path, "**", "*.rb")
-            Dir.glob(ruby_files).lazy
+            Dir.glob(ruby_files).map do |f|
+              Mudguard::Domain::Source.new(location: f, code: File.read(f))
+            end.lazy
           end
         end
       end

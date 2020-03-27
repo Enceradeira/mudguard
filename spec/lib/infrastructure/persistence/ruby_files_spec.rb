@@ -3,6 +3,7 @@
 require "spec_helper"
 require "mudguard/domain/error"
 require "mudguard/infrastructure/persistence/ruby_files"
+require "mudguard/domain/source"
 require_relative "../../../test_projects/test_projects"
 
 module Mudguard
@@ -10,7 +11,7 @@ module Mudguard
     module Persistence
       RSpec.describe RubyFiles do
         describe ".all" do
-          subject(:ruby_files) { RubyFiles.all(prj_path) }
+          subject(:ruby_files) { RubyFiles.all(project_path) }
 
           context "when dir not exists" do
             it "raises an error" do
@@ -20,18 +21,23 @@ module Mudguard
           end
 
           context "when empty project" do
-            let(:prj_path) { TestProjects::PATH_TO_EMPTY_DIR }
+            let(:project_path) { TestProjects::PATH_TO_EMPTY_DIR }
 
             it { expect(ruby_files.any?).to be_falsey }
           end
 
           context "when hierarchical project" do
-            let(:prj_path) { TestProjects::PATH_TO_HIERARCHICAL_PROJECT }
-
-            it "returns all ruby-files" do
-              all_rb_files = %W[#{prj_path}/root.rb #{prj_path}/a/a.rb #{prj_path}/a/b/b.rb]
-              expect(ruby_files).to match_array(all_rb_files)
+            let(:project_path) { TestProjects::PATH_TO_HIERARCHICAL_PROJECT }
+            let(:files_in_path) do
+              %W[#{project_path}/root.rb #{project_path}/a/a.rb #{project_path}/a/b/b.rb]
             end
+            let(:sources_in_path) do
+              files_in_path.map do |f|
+                Mudguard::Domain::Source.new(location: f, code: File.read(f))
+              end
+            end
+
+            it { expect(ruby_files).to match_array(sources_in_path) }
           end
         end
       end

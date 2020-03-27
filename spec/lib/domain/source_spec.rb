@@ -2,37 +2,40 @@
 
 require "spec_helper"
 
+require "mudguard/domain/source"
+
 module Mudguard
   module Domain
-    RSpec.describe RubyAnalyser do
+    RSpec.describe Source do
+      subject(:source) { Source.new(location: "test.rb", code: code) }
       describe ".find_mod_dependencies" do
-        subject(:dependencies) { RubyAnalyser.find_mod_dependencies(source) }
+        subject(:dependencies) { source.find_mod_dependencies }
         context "when empty" do
-          let(:source) { "" }
+          let(:code) { "" }
           it { is_expected.to be_empty }
         end
         context "when ruby invalid" do
-          let(:source) { "module" }
+          let(:code) { "module" }
           it { is_expected.to be_empty }
         end
 
         context "when ruby has no dependencies" do
-          let(:source) { "module A;end" }
+          let(:code) { "module A;end" }
           it { is_expected.to be_empty }
         end
 
         context "when ruby has dependencies" do
-          let(:source) { "module A;b=B::C;end" }
+          let(:code) { "module A;b=B::C;end" }
           it { is_expected.to match_array(["A->B::C"]) }
         end
 
         context "when ruby contains declaration without module" do
-          let(:source) { "class A;end" }
+          let(:code) { "class A;end" }
           it { is_expected.to be_empty }
         end
 
         context "when ruby contains declaration in module" do
-          let(:source) { "module A;class B;end;end" }
+          let(:code) { "module A;class B;end;end" }
           it { is_expected.to be_empty }
         end
       end
