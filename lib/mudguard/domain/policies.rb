@@ -11,7 +11,7 @@ module Mudguard
       end
 
       def check(sources, notification)
-        result = check_sources(sources)
+        result = check_sources(sources, notification)
 
         count = result[:count]
         violations = result[:violations]
@@ -28,7 +28,7 @@ module Mudguard
         count == 1 ? word : "#{word}s"
       end
 
-      def check_sources(sources)
+      def check_sources(sources, notification)
         sources.each_with_object(count: 0, violations: 0) do |source, result|
           result[:count] += 1
           dependencies = RubyAnalyser.find_mod_dependencies(source)
