@@ -27,15 +27,17 @@ module Mudguard
 
         context "when ruby has dependencies" do
           let(:code) { "module A;b=B::C;end" }
-          it "returns dependencies" do
-            dependency_on_line1 = Dependency.new(location: "test.rb:1", dependency: "A->B::C")
-            is_expected.to match_array([dependency_on_line1])
-          end
+          it { expect(dependencies).to include_dependency("test.rb:1", "A->B::C") }
         end
 
         context "when ruby contains declaration without module" do
           let(:code) { "class A;end" }
           it { is_expected.to be_empty }
+        end
+
+        context "when ruby depends on other module without being in a module" do
+          let(:code) { "class A < B::C;end" }
+          it { expect(dependencies).to include_dependency("test.rb:1", "B::C") }
         end
 
         context "when ruby contains declaration in module" do

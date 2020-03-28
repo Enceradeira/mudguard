@@ -3,6 +3,7 @@
 require "bundler/setup"
 require "mudguard"
 require "pry"
+require "support/matchers"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

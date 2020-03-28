@@ -47,7 +47,12 @@ module Mudguard
       end
 
       def create_dependency(module_name, node)
-        dependency = "#{module_name}->#{find_const_name(node.children)}"
+        const_name = find_const_name(node.children)
+        dependency = if module_name.empty?
+                       const_name
+                     else
+                       "#{module_name}->#{const_name}"
+                     end
         location = "#{@location}:#{node.location.line}"
         Dependency.new(location: location, dependency: dependency)
       end
