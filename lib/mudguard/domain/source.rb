@@ -40,7 +40,7 @@ module Mudguard
         when type?(:class)
           process_class(node.children, module_name)
         when type?(:const)
-          [create_dependency(module_name, node)]
+          create_dependency(module_name, node)
         else
           ignore_and_continue(node, module_name)
         end
@@ -48,13 +48,15 @@ module Mudguard
 
       def create_dependency(module_name, node)
         const_name = find_const_name(node.children)
+        return [] unless const_name&.include?("::")
+
         dependency = if module_name.empty?
                        const_name
                      else
                        "#{module_name}->#{const_name}"
                      end
         location = "#{@location}:#{node.location.line}"
-        Dependency.new(location: location, dependency: dependency)
+        [Dependency.new(location: location, dependency: dependency)]
       end
 
       def ignore_and_continue(node, module_name)

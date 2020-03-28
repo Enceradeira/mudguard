@@ -15,32 +15,37 @@ module Mudguard
           let(:code) { "" }
           it { is_expected.to be_empty }
         end
-        context "when ruby invalid" do
+        context "when code invalid" do
           let(:code) { "module" }
           it { is_expected.to be_empty }
         end
 
-        context "when ruby has no dependencies" do
+        context "when code has no dependencies" do
           let(:code) { "module A;end" }
           it { is_expected.to be_empty }
         end
 
-        context "when ruby has dependencies" do
+        context "when code has dependencies" do
           let(:code) { "module A;b=B::C;end" }
           it { expect(dependencies).to include_dependency("test.rb:1", "A->B::C") }
         end
 
-        context "when ruby contains declaration without module" do
+        context "when code has dependency to const in same module" do
+          let(:code) { "module A;b=B;end" }
+          it { expect(dependencies).to be_empty }
+        end
+
+        context "when code contains declaration without module" do
           let(:code) { "class A;end" }
           it { is_expected.to be_empty }
         end
 
-        context "when ruby depends on other module without being in a module" do
+        context "when code depends on other module without being in a module" do
           let(:code) { "class A < B::C;end" }
           it { expect(dependencies).to include_dependency("test.rb:1", "B::C") }
         end
 
-        context "when ruby contains declaration in module" do
+        context "when code contains declaration in module" do
           let(:code) { "module A;class B;end;end" }
           it { is_expected.to be_empty }
         end
