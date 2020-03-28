@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = "mudguard helps your ruby project not becoming a "\
                        "'Big ball of mud'"
-  spec.homepage      = "https://gibhub.com/Enceradeira/mudguard"
+  spec.homepage      = "https://github.com/Enceradeira/mudguard"
   spec.license       = "MIT"
 
   spec.metadata["homepage_uri"] = spec.homepage
