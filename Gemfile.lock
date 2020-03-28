@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mudguard (0.1.5)
+    mudguard (0.1.6)
       parser (~> 2.7)
 
 GEM
