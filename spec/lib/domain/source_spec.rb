@@ -26,8 +26,26 @@ module Mudguard
         end
 
         context "when code has dependencies" do
-          let(:code) { "module A;b=B::C;end" }
-          it { expect(dependencies).to include_dependency("test.rb:1", "A->B::C") }
+          context "and module is not nested" do
+            let(:code) { "module A;b=B::C;end" }
+            it { expect(dependencies).to include_dependency("test.rb:1", "A->B::C") }
+          end
+          context "and module is nested using compact style" do
+            let(:code) { "module A::B;b=B::C;end" }
+            it { expect(dependencies).to include_dependency("test.rb:1", "A::B->B::C") }
+          end
+          context "and module is nested" do
+            let(:code) do
+              %(
+                module A
+                  module B
+                    c = B::C;
+                  end
+                end
+              )
+            end
+            it { expect(dependencies).to include_dependency("test.rb:4", "A::B->B::C") }
+          end
         end
 
         context "when code has dependency to const in same module" do

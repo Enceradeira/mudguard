@@ -36,7 +36,7 @@ module Mudguard
       def process(node, module_name = "")
         case node
         when type?(:module)
-          process_module(node.children)
+          process_module(node.children, module_name)
         when type?(:class)
           process_class(node.children, module_name)
         when type?(:const)
@@ -68,8 +68,13 @@ module Mudguard
         end
       end
 
-      def process_module(children)
-        module_name = find_const_name(children[0].children)
+      def process_module(children, module_name)
+        const_name = find_const_name(children[0].children)
+        module_name = if module_name.empty?
+                        const_name
+                      else
+                        "#{module_name}::#{const_name}"
+                      end
         process(children[1], module_name)
       end
 
