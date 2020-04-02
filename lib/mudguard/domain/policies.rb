@@ -5,7 +5,7 @@ module Mudguard
     # Contains the policies to be enforced
     class Policies
       def initialize(policies: [])
-        @policies = policies.map { |l| l.gsub(/\s/, "") }.map { |p| /^#{p}/ }
+        @policies = policies.map { |p| /^#{p}/ }
       end
 
       def check(sources, notification)
@@ -35,10 +35,10 @@ module Mudguard
       end
 
       def check_dependencies(dependencies, notification)
-        dependencies.reject { |d| check_dependency(d, notification) }.count
+        dependencies.reject { |d| dependency_allowed?(d, notification) }.count
       end
 
-      def check_dependency(dependency, notification)
+      def dependency_allowed?(dependency, notification)
         is_allowed = @policies.any? { |p| dependency.match(p) }
         notification.add("#{dependency} not allowed") unless is_allowed
         is_allowed

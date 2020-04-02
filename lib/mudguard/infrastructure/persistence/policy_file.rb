@@ -15,7 +15,7 @@ module Mudguard
             raise Mudguard::Domain::Error, "expected policy file #{policy_file} doesn't exists"
           end
 
-          Mudguard::Domain::Policies.new(policies: File.readlines(policy_file))
+          File.readlines(policy_file).map { |l| l.gsub(/\s/, "") }.reject(&:empty?)
         end
       end
     end

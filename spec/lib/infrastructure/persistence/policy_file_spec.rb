@@ -10,10 +10,18 @@ module Mudguard
       RSpec.describe PolicyFile do
         describe ".read" do
           let(:file_path) { File.expand_path("tmp/MudguardFile") }
+          before { File.delete(file_path) if File.exists?(file_path) }
           context "when file exists" do
-            before { FileUtils.touch(file_path) }
+            subject(:policies) { PolicyFile.read(file_path) }
+            context "and file is empty" do
+              before { FileUtils.touch(file_path) }
+              it { expect(policies).to be_empty }
+            end
 
-            it { expect(PolicyFile.read(file_path)).to_not be_nil }
+            context "when file has empty lines" do
+              before { File.write(file_path, "\n\n") }
+              it { expect(policies).to be_empty }
+            end
           end
 
           context "when file not exists" do
