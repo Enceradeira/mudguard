@@ -10,7 +10,7 @@ module Mudguard
         subject(:result_and_messages) do
           notification = Mudguard::Stubs::Notification.new
           result = Policies.new(policies: policies).check(sources, notification)
-          { result: result, messages: notification.messages }
+          {result: result, messages: notification.messages}
         end
         subject(:result) { result_and_messages[:result] }
         subject(:messages) { result_and_messages[:messages] }
@@ -102,6 +102,12 @@ module Mudguard
               expect(messages).to match_array([problem1, problem2, summary])
             end
           end
+        end
+
+        context "when policy has comment" do
+          let(:policies) { ["A->D # a comment"] }
+          let(:sources) { [Source.new(code: "module A;dep=D::C;end")] }
+          it { expect(result).to be_truthy }
         end
       end
     end

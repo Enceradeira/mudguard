@@ -5,7 +5,7 @@ module Mudguard
     # Contains the policies to be enforced
     class Policies
       def initialize(policies: [])
-        @policies = policies.map { |p| /^#{p}/ }
+        @policies = policies.map { |p| /^#{p}/x }
       end
 
       def check(sources, notification)
