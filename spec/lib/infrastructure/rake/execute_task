@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "rake"
+require "mudguard/infrastructure/rake/task"
+
+# load rake task
+Mudguard::Infrastructure::Rake::Task.new(project_dir: ARGV[0])
+
+# execute rake task
+Rake.application.invoke_task("mudguard")

@@ -3,6 +3,7 @@ PATH
   specs:
     mudguard (0.1.7)
       parser (~> 2.7)
+      rake (~> 13.0)
 
 GEM
   remote: https://rubygems.org/
