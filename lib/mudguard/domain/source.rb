@@ -4,7 +4,7 @@ require "parser/current"
 require "mudguard/domain/dependency"
 
 module Mudguard
- module Domain
+  module Domain
     # Represents a Ruby source file
     class Source
       def initialize(location: nil, code:)

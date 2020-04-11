@@ -8,14 +8,25 @@ module Mudguard
     module Persistence
       # A file containing the Mudguard-Policies
       class PolicyFile
-        def self.read(policy_file)
-          policy_exists = File.exist?(policy_file)
+        class << self
+          def read(policy_file)
+            policy_exists = File.exist?(policy_file)
 
-          unless policy_exists
-            raise Mudguard::Domain::Error, "expected policy file #{policy_file} doesn't exists"
+            unless policy_exists
+              raise Mudguard::Domain::Error, "expected policy file #{policy_file} doesn't exists"
+            end
+
+            File.readlines(policy_file)
+                .map { |l| l.gsub(/\s/, "") }
+                .reject(&:empty?)
+                .reject(&method(:only_comment?))
           end
 
-          File.readlines(policy_file).map { |l| l.gsub(/\s/, "") }.reject(&:empty?)
+          private
+
+          def only_comment?(line)
+            line.match(/^\w*#/)
+          end
         end
       end
     end

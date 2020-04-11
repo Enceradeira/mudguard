@@ -22,6 +22,11 @@ module Mudguard
               before { File.write(file_path, "\n\n") }
               it { expect(policies).to be_empty }
             end
+
+            context "when file has comment lines" do
+              before { File.write(file_path, " # This is a line with comment only") }
+              it { expect(policies).to be_empty }
+            end
           end
 
           context "when file not exists" do
