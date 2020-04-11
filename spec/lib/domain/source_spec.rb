@@ -15,6 +15,7 @@ module Mudguard
           let(:code) { "" }
           it { is_expected.to be_empty }
         end
+
         context "when code invalid" do
           let(:code) { "module" }
           it { is_expected.to be_empty }

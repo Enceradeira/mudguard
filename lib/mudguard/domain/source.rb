@@ -21,17 +21,27 @@ module Mudguard
       end
 
       def find_mod_dependencies
-        begin
-          root = Parser::CurrentRuby.parse(@code)
-        rescue Parser::SyntaxError
-          return []
-        end
-        return [] if root.nil?
+        return [] if ast == SYNTAX_ERROR
 
-        process(root)
+        process(ast)
       end
 
       private
+
+      SYNTAX_ERROR = "error"
+
+      def ast
+        @ast ||= create_ast
+      end
+
+      def create_ast
+        begin
+          root = Parser::CurrentRuby.parse(@code)
+        rescue Parser::SyntaxError
+          return SYNTAX_ERROR
+        end
+        root.nil? ? SYNTAX_ERROR : root
+      end
 
       def process(node, module_name = "")
         case node
