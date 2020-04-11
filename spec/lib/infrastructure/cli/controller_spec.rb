@@ -3,6 +3,7 @@
 require "spec_helper"
 require "mudguard/infrastructure/cli/controller"
 require "mudguard/domain/error"
+require "mudguard/domain/texts"
 require_relative "../../../test_projects/test_projects"
 require_relative "../../../stubs/view"
 
@@ -26,16 +27,15 @@ module Mudguard
               let(:project_dir) { TestProjects::PATH_TO_MUDDY_PROJECT }
               it { expect(result).to be_falsey }
               it "prints results" do
-                problem = "./b.rb:6 B->A::Klass not allowed"
-                summary = "2 files inspected, 1 problem detected"
-                expect(messages).to eq([problem, summary])
+                problem = "./b.rb:6 #{dependency_not_allowed('B->A::Klass')}"
+                expect(messages).to eq([problem, summary(2, 1)])
               end
             end
 
             context "with clean project" do
               let(:project_dir) { TestProjects::PATH_TO_CLEAN_PROJECT }
               it { expect(result).to be_truthy }
-              it { expect(messages).to eq(["2 files inspected, 0 problems detected"]) }
+              it { expect(messages).to eq([summary(2, 0)]) }
             end
 
             context "without any arguments" do
