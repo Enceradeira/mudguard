@@ -7,7 +7,9 @@ module Mudguard
     # Knows all constants of the project
     class Consts
       def initialize(sources:)
-        @consts = sources.flat_map(&:find_consts).each_with_object(Hash.new { |h, k| h[k] = {} }) do |c, a|
+        @consts = sources
+                  .flat_map(&:find_consts)
+                  .each_with_object(Hash.new { |h, k| h[k] = {} }) do |c, a|
           path = split_hierarchy(c)
           const_name = path.last
           module_names = path.take(path.count - 1)

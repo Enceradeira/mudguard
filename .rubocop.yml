@@ -2,6 +2,7 @@ AllCops:
   Exclude:
     - 'bin/*'
     - 'spec/test_projects/**/*.rb'
+    - 'spec/lib/domain/source_examples/*.rb'
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes

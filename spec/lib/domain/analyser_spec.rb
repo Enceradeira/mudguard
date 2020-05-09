@@ -32,7 +32,8 @@ module Mudguard
             let(:code) { "\n\nmodule A;dep=B::C;end" }
             it { expect(result).to eq(1) }
             it "generates message" do
-              expect(messages).to match_array(["#{file}:3 #{dependency_not_allowed('::A->::B::C')}"])
+              error = dependency_not_allowed("::A->::B::C")
+              expect(messages).to match_array(["#{file}:3 #{error}"])
             end
           end
         end

@@ -10,7 +10,7 @@ module Mudguard
 
       attr_reader :consts
 
-      def visit_dependency(_, __, ___); end
+      def visit_dependency(_, __, ___); end # rubocop:disable Naming/MethodParameterName
 
       def visit_const_declaration(_location, const_name, module_name)
         @consts << if module_name.empty?

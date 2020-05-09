@@ -88,7 +88,7 @@ CODE
   end
 CODE
           end
-          let (:code2) do
+          let(:code2) do
             <<CODE
   module A
    allowed_dependency=B::D

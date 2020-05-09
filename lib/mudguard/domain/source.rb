@@ -81,9 +81,9 @@ module Mudguard
       end
 
       def ignore_and_continue(node, visitor, module_name)
-        if node.respond_to?(:children)
-          node.children.flat_map { |c| process(c, visitor, module_name) }
-        end
+        return unless node.respond_to?(:children)
+
+        node.children.flat_map { |c| process(c, visitor, module_name) }
       end
 
       def process_module(node, visitor, module_name)
@@ -100,7 +100,9 @@ module Mudguard
       def find_const_name(children)
         return nil if children.nil?
 
-        module_name = find_const_name(children[0]&.children)
+        first_child = children[0]
+        first_child_children = first_child.respond_to?(:children) ? first_child.children : nil
+        module_name = find_const_name(first_child_children)
         const_name = children[1].to_s
         if module_name.nil?
           const_name

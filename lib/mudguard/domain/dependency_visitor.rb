@@ -24,7 +24,9 @@ module Mudguard
         @dependencies << Dependency.new(location: location, dependency: dependency)
       end
 
+      # rubocop:disable Naming/MethodParameterName
       def visit_const_declaration(_, __, ___); end
+      # rubocop:enable Naming/MethodParameterName
     end
   end
 end
