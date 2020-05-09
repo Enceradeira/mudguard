@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 require "parser/current"
-require "mudguard/domain/dependency"
+require_relative "dependency"
+require_relative "dependency_visitor"
+require_relative "const_visitor"
+require_relative "error"
 
 module Mudguard
   module Domain
@@ -20,10 +23,16 @@ module Mudguard
         @location
       end
 
-      def find_mod_dependencies
-        return [] if ast == SYNTAX_ERROR
+      def find_mod_dependencies(consts)
+        visitor = DependencyVisitor.new(consts: consts)
+        visit_ast(visitor)
+        visitor.dependencies
+      end
 
-        process(ast)
+      def find_consts
+        visitor = ConstVisitor.new
+        visit_ast(visitor)
+        visitor.consts
       end
 
       private
@@ -43,53 +52,49 @@ module Mudguard
         root.nil? ? SYNTAX_ERROR : root
       end
 
-      def process(node, module_name = "")
+      def visit_ast(visitor)
+        return if ast == SYNTAX_ERROR
+
+        process(ast, visitor, "")
+      end
+
+      def process(node, visitor, module_name)
         case node
         when type?(:module)
-          process_module(node.children, module_name)
+          process_module(node, visitor, module_name)
         when type?(:class)
-          process_class(node.children, module_name)
+          process_module(node, visitor, module_name)
         when type?(:const)
-          create_dependency(module_name, node)
+          process_const(node, visitor, module_name)
         else
-          ignore_and_continue(node, module_name)
+          ignore_and_continue(node, visitor, module_name)
         end
       end
 
-      def create_dependency(module_name, node)
+      def process_const(node, visitor, module_name)
         const_name = find_const_name(node.children)
-        return [] unless const_name&.include?("::")
-
-        dependency = if module_name.empty?
-                       const_name
-                     else
-                       "#{module_name}->#{const_name}"
-                     end
-        location = "#{@location}:#{node.location.line}"
-        [Dependency.new(location: location, dependency: dependency)]
+        visitor.visit_dependency(describe_location(node), const_name, module_name)
       end
 
-      def ignore_and_continue(node, module_name)
-        case node
-        when children?
-          node.children.flat_map { |c| process(c, module_name) }
-        else
-          []
+      def describe_location(node)
+        "#{@location}:#{node.location.line}"
+      end
+
+      def ignore_and_continue(node, visitor, module_name)
+        if node.respond_to?(:children)
+          node.children.flat_map { |c| process(c, visitor, module_name) }
         end
       end
 
-      def process_module(children, module_name)
-        const_name = find_const_name(children[0].children)
-        module_name = if module_name.empty?
-                        const_name
-                      else
-                        "#{module_name}::#{const_name}"
-                      end
-        process(children[1], module_name)
-      end
+      def process_module(node, visitor, module_name)
+        const_name = find_const_name(node.children[0].children)
+        const_name = module_name.empty? ? "::#{const_name}" : const_name
+        visitor.visit_const_declaration(describe_location(node), const_name, module_name)
 
-      def process_class(children, module_name)
-        process(children[1], module_name)
+        module_name = module_name.empty? ? const_name : "#{module_name}::#{const_name}"
+        node.children.drop(1).reject(&:nil?).each do |child_node|
+          process(child_node, visitor, module_name)
+        end
       end
 
       def find_const_name(children)
@@ -102,10 +107,6 @@ module Mudguard
         else
           "#{module_name}::#{const_name}"
         end
-      end
-
-      def children?
-        ->(n) { n.respond_to?(:children) }
       end
 
       def type?(type)

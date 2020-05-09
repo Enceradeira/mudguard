@@ -10,7 +10,7 @@ module Mudguard
         subject(:result_and_messages) do
           notification = Mudguard::Stubs::Notification.new
           result = Policies.new(policies: policies).check(sources, notification)
-          {result: result, messages: notification.messages}
+          { result: result, messages: notification.messages }
         end
         subject(:result) { result_and_messages[:result] }
         subject(:messages) { result_and_messages[:messages] }
@@ -51,12 +51,12 @@ CODE
   end
 CODE
           end
-          let(:policies) {["A->A::B::D"]}
+          let(:policies) { ["::A->::A::B::D"] }
 
           it { expect(result).to be_falsey }
           it "generates messages" do
-            problem1 = "#{file1}:3 #{dependency_not_allowed('A->B::C')}"
-            problem2 = "#{file2}:1 #{dependency_not_allowed('B->B::D::C')}"
+            problem1 = "#{file1}:2 #{dependency_not_allowed('::A->::B::C')}"
+            problem2 = "#{file2}:2 #{dependency_not_allowed('::B->::B::D::C')}"
             expect(messages).to match_array([problem1, problem2, summary(2, 2)])
           end
         end

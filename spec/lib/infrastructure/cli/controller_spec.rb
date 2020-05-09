@@ -27,7 +27,7 @@ module Mudguard
               let(:project_dir) { TestProjects::PATH_TO_MUDDY_PROJECT }
               it { expect(result).to be_falsey }
               it "prints results" do
-                problem = "./b.rb:6 #{dependency_not_allowed('B->A::Klass')}"
+                problem = "./b.rb:6 #{dependency_not_allowed('::B->::A::Klass')}"
                 expect(messages).to eq([problem, summary(2, 1)])
               end
             end

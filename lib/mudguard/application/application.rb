@@ -2,6 +2,7 @@
 
 require_relative "../infrastructure/persistence/policy_file"
 require_relative "../infrastructure/persistence/ruby_files"
+require_relative "../domain/policies"
 
 # Contains methods to check if your project is a bit muddy
 module Mudguard

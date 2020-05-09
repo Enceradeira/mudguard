@@ -13,8 +13,8 @@ module Mudguard
         @notification = notification
       end
 
-      def check(source)
-        check_dependencies(source.find_mod_dependencies)
+      def check(source, consts)
+        check_dependencies(source.find_mod_dependencies(consts))
       end
 
       private

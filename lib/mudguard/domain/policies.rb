@@ -2,6 +2,7 @@
 
 require_relative "analyser"
 require_relative "texts"
+require_relative "consts"
 
 module Mudguard
   module Domain
@@ -27,9 +28,10 @@ module Mudguard
 
       def check_sources(sources, notification)
         analyser = Analyser.new(policies: @policies, notification: notification)
+        consts = Consts.new(sources: sources)
         sources.each_with_object(count: 0, violations: 0) do |source, result|
           result[:count] += 1
-          result[:violations] += analyser.check(source)
+          result[:violations] += analyser.check(source, consts)
         end
       end
     end
