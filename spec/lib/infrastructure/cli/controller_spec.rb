@@ -76,6 +76,24 @@ module Mudguard
               it_behaves_like "help writter"
             end
           end
+
+          context "when print is requested" do
+            shared_examples "a dependency printer" do
+              it { expect(result).to be_truthy }
+              it { expect(messages.length).to be > 1 }
+              it { expect(messages.last).to match(/#{dependency_summary(2, 1)}/) }
+            end
+
+            context "with -p" do
+              let(:argv) { ["-p", TestProjects::PATH_TO_CLEAN_PROJECT] }
+              it_behaves_like "a dependency printer"
+            end
+
+            context "with --print" do
+              let(:argv) { ["--print", TestProjects::PATH_TO_CLEAN_PROJECT] }
+              it_behaves_like "a dependency printer"
+            end
+          end
         end
       end
     end

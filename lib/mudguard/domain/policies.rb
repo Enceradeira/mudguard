@@ -15,23 +15,32 @@ module Mudguard
       end
 
       def check(sources, notification)
-        result = check_sources(sources, notification)
+        result = analyse(sources, :check, notification)
 
-        count = result[:count]
-        violations = result[:violations]
+        count = result[:sources_count]
+        violations = result[:analyser_count]
 
         notification.add(summary(count, violations))
         violations.zero?
       end
 
+      def print_allowed_dependencies(sources, notification)
+        result = analyse(sources, :print_allowed_dependencies, notification)
+
+        count = result[:sources_count]
+        violations = result[:analyser_count]
+
+        notification.add(dependency_summary(count, violations))
+      end
+
       private
 
-      def check_sources(sources, notification)
+      def analyse(sources, method, notification)
         analyser = Analyser.new(policies: @policies, notification: notification)
         consts = Consts.new(sources: sources)
-        sources.each_with_object(count: 0, violations: 0) do |source, result|
-          result[:count] += 1
-          result[:violations] += analyser.check(source, consts)
+        sources.each_with_object(sources_count: 0, analyser_count: 0) do |source, result|
+          result[:sources_count] += 1
+          result[:analyser_count] += analyser.send(method, source, consts)
         end
       end
     end

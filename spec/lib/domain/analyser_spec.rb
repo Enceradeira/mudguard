@@ -9,17 +9,17 @@ module Mudguard
   module Domain
     RSpec.describe Analyser do
       subject(:analyser) { Analyser.new(policies: policies, notification: notification) }
+      subject(:notification) { Mudguard::Stubs::Notification.new }
+      let(:file) { "./dir/source.rb" }
+      let(:source) { Source.new(location: file, code: code) }
+      let(:consts) { Consts.new(sources: [source]) }
       describe "#check" do
-        subject(:notification) { Mudguard::Stubs::Notification.new }
         subject(:result_and_messages) do
           result = analyser.check(source, consts)
           { result: result, messages: notification.messages }
         end
         subject(:result) { result_and_messages[:result] }
         subject(:messages) { result_and_messages[:messages] }
-        let(:file) { "./dir/source.rb" }
-        let(:source) { Source.new(location: file, code: code) }
-        let(:consts) { Consts.new(sources: [source]) }
         context "when no policies" do
           let(:policies) { [] }
           context "and no dependencies" do
@@ -87,6 +87,19 @@ module Mudguard
             it { expect(result).to eq(1) }
           end
         end
+      end
+
+      describe "#print_allowed_dependencies" do
+        subject(:result_and_messages) do
+          result = analyser.print_allowed_dependencies(source, consts)
+          { result: result, messages: notification.messages }
+        end
+        subject(:result) { result_and_messages[:result] }
+        subject(:messages) { result_and_messages[:messages] }
+        let(:policies) { %w[::A->::B::D ::A->::X::Y] }
+        let(:code) { "module A;dep=B::C;dep=B::D;end" }
+        it { expect(result).to eq(1) }
+        it { expect(messages).to match_array(["#{file}:1 #{dependency_allowed('::A->::B::D')}"]) }
       end
     end
   end
