@@ -100,6 +100,11 @@ CODE
           let(:code) { "module A;class B;end;end" }
           it { is_expected.to be_empty }
         end
+
+        context "when code dependency is outside module declaration" do
+          let(:code) { "dependency = A;" }
+          it { expect(dependencies).to include_dependency("test.rb:1", "->::A") }
+        end
       end
     end
   end

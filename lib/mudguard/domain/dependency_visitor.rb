@@ -16,7 +16,7 @@ module Mudguard
         return [] unless qualified_const_name&.include?("::")
 
         dependency = if module_name.empty?
-                       qualified_const_name
+                       "->#{qualified_const_name}"
                      else
                        "#{module_name}->#{qualified_const_name}"
                      end
