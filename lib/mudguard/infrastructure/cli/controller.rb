@@ -18,7 +18,7 @@ module Mudguard
               @cmd = :help
             end
             opts.on("-p", "--print", "Prints all allowed dependencies") do
-              @cmd = :print_allowed_dependencies
+              @cmd = :print_allowed
             end
           end
         end
@@ -27,7 +27,7 @@ module Mudguard
           directories = @parser.parse!(argv)
 
           case @cmd
-          when :print_allowed_dependencies
+          when :print_allowed
             print_allowed_dependencies(directories)
           when :help
             help

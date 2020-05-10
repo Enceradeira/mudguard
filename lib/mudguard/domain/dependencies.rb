@@ -4,8 +4,8 @@ require_relative "texts"
 
 module Mudguard
   module Domain
-    # Analyses a source and checks a set of policies
-    class Analyser
+    # Executes operation on a set of dependencies
+    class Dependencies
       include Texts
 
       def initialize(policies:, notification:)
@@ -20,7 +20,7 @@ module Mudguard
         end
       end
 
-      def print_allowed_dependencies(dependencies)
+      def print_allowed(dependencies)
         select_dependencies(dependencies) do |dependency, is_allowed|
           @notification.add(dependency_allowed(dependency)) if is_allowed
           is_allowed

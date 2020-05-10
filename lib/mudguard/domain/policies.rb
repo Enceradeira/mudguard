@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "analyser"
+require_relative "dependencies"
 require_relative "texts"
 require_relative "consts"
 
@@ -25,7 +25,7 @@ module Mudguard
       end
 
       def print_allowed_dependencies(sources, notification)
-        result = analyse(sources, :print_allowed_dependencies, notification)
+        result = analyse(sources, :print_allowed, notification)
 
         count = result[:sources_count]
         violations = result[:analyser_count]
@@ -36,7 +36,7 @@ module Mudguard
       private
 
       def analyse(sources, method, notification)
-        analyser = Analyser.new(policies: @policies, notification: notification)
+        analyser = Dependencies.new(policies: @policies, notification: notification)
         consts = Consts.new(sources: sources)
         sources.each_with_object(sources_count: 0, analyser_count: 0) do |source, result|
           dependencies = source.find_mod_dependencies(consts)

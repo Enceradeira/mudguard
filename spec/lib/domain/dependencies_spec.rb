@@ -2,13 +2,13 @@
 
 require "spec_helper"
 require_relative "../../../spec/stubs/notification"
-require "mudguard/domain/analyser"
+require "mudguard/domain/dependencies"
 require "mudguard/domain/texts"
 
 module Mudguard
   module Domain
-    RSpec.describe Analyser do
-      subject(:analyser) { Analyser.new(policies: policies, notification: notification) }
+    RSpec.describe Dependencies do
+      subject(:analyser) { Dependencies.new(policies: policies, notification: notification) }
       subject(:notification) { Mudguard::Stubs::Notification.new }
       describe "#check" do
         subject(:result_and_messages) do
@@ -99,7 +99,7 @@ module Mudguard
 
       describe "#print_allowed_dependencies" do
         subject(:result_and_messages) do
-          result = analyser.print_allowed_dependencies(dependencies)
+          result = analyser.print_allowed(dependencies)
           { result: result, messages: notification.messages }
         end
         subject(:result) { result_and_messages[:result] }
