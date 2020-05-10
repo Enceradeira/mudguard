@@ -39,8 +39,9 @@ module Mudguard
         analyser = Analyser.new(policies: @policies, notification: notification)
         consts = Consts.new(sources: sources)
         sources.each_with_object(sources_count: 0, analyser_count: 0) do |source, result|
+          dependencies = source.find_mod_dependencies(consts)
           result[:sources_count] += 1
-          result[:analyser_count] += analyser.send(method, source, consts)
+          result[:analyser_count] += analyser.send(method, dependencies)
         end
       end
     end

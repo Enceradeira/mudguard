@@ -13,15 +13,15 @@ module Mudguard
         @notification = notification
       end
 
-      def check(source, consts)
-        select_dependencies(source.find_mod_dependencies(consts)) do |dependency, is_allowed|
+      def check(dependencies)
+        select_dependencies(dependencies) do |dependency, is_allowed|
           @notification.add(dependency_not_allowed(dependency)) unless is_allowed
           !is_allowed
         end
       end
 
-      def print_allowed_dependencies(source, consts)
-        select_dependencies(source.find_mod_dependencies(consts)) do |dependency, is_allowed|
+      def print_allowed_dependencies(dependencies)
+        select_dependencies(dependencies) do |dependency, is_allowed|
           @notification.add(dependency_allowed(dependency)) if is_allowed
           is_allowed
         end
