@@ -3,5 +3,5 @@
 require_relative "a"
 
 module B
-  dependency1 = A::Klass
+  dependency2 = A::Klass
 end

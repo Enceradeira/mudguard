@@ -20,7 +20,7 @@ module Mudguard
           context "when it's muddy" do
             let(:project) { TestProjects::PATH_TO_MUDDY_PROJECT }
             it { expect(exit_code).not_to be_success }
-            it { expect(std_out).to match(/#{summary(2, 1)}/) }
+            it { expect(std_out).to match(/#{summary(3, 2)}/) }
           end
 
           context "when it's ok" do

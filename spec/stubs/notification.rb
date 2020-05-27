@@ -9,8 +9,12 @@ module Mudguard
         @messages = []
       end
 
-      def add(message)
-        @messages << message
+      def add(location, message)
+        @messages << if location.nil?
+                       message
+                     else
+                       "#{location} #{message}"
+                     end
       end
     end
   end

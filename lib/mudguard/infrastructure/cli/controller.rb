@@ -10,8 +10,12 @@ module Mudguard
       # Parses the cli arguments
       class Controller
         def initialize(view:) # rubocop:disable Layout/MethodLength
-          @view = view
           @cmd = :analyse
+          @view = view
+          @display_opts = {
+            view: view,
+            compressed: false
+          }
           @parser = ::OptionParser.new do |opts|
             opts.banner = "Usage: mudguard [options] [directory]"
             opts.on("-h", "--help", "Prints this help") do
@@ -19,6 +23,9 @@ module Mudguard
             end
             opts.on("-p", "--print", "Prints all allowed dependencies") do
               @cmd = :print_allowed
+            end
+            opts.on("-c", "--compressed", "Omits printing the same dependency more than once") do
+              @display_opts[:compressed] = true
             end
           end
         end
@@ -59,7 +66,7 @@ module Mudguard
         end
 
         def yield_directories(directories)
-          notification = NotificationAdapter.new(view: @view)
+          notification = NotificationAdapter.new(**@display_opts)
           directories = [Dir.pwd] if directories.empty?
           directories.all? do |directory|
             yield directory, notification

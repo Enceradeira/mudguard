@@ -4,6 +4,8 @@ module Mudguard
   module Domain
     # A Dependency between Modules
     class Dependency
+      attr_reader :location, :dependency
+
       def initialize(location: nil, dependency:)
         @location = location
         @dependency = dependency
@@ -11,10 +13,6 @@ module Mudguard
 
       def inspect
         "{#{@location}, #{@dependency}}"
-      end
-
-      def to_s
-        "#{@location} #{@dependency}"
       end
 
       def match(policy)

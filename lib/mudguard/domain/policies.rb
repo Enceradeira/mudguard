@@ -20,7 +20,7 @@ module Mudguard
         count = result[:sources_count]
         violations = result[:analyser_count]
 
-        notification.add(summary(count, violations))
+        notification.add(nil, summary(count, violations))
         violations.zero?
       end
 
@@ -30,7 +30,7 @@ module Mudguard
         count = result[:sources_count]
         violations = result[:analyser_count]
 
-        notification.add(dependency_summary(count, violations))
+        notification.add(nil, dependency_summary(count, violations))
       end
 
       private

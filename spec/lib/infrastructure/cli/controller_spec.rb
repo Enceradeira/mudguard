@@ -27,8 +27,9 @@ module Mudguard
               let(:project_dir) { TestProjects::PATH_TO_MUDDY_PROJECT }
               it { expect(result).to be_falsey }
               it "prints results" do
-                problem = "./b.rb:6 #{dependency_not_allowed('::B->::A::Klass')}"
-                expect(messages).to eq([problem, summary(2, 1)])
+                problem1 = "./c.rb:6 #{dependency_not_allowed('::B->::A::Klass')}"
+                problem2 = "./b.rb:6 #{dependency_not_allowed('::B->::A::Klass')}"
+                expect(messages).to eq([problem1, problem2, summary(3, 2)])
               end
             end
 
@@ -55,7 +56,7 @@ module Mudguard
           end
 
           context "when help is requested" do
-            shared_examples "help writter" do
+            shared_examples "printing help" do
               it { expect(result).to be_truthy }
               it { expect(messages.length).to eq(1) }
               it { expect(messages.first).to match(/^Usage:.*/) }
@@ -63,22 +64,22 @@ module Mudguard
 
             context "with -h" do
               let(:argv) { ["-h"] }
-              it_behaves_like "help writter"
+              it_behaves_like "printing help"
             end
 
             context "with --help" do
               let(:argv) { ["--help"] }
-              it_behaves_like "help writter"
+              it_behaves_like "printing help"
             end
 
             context "with --help ./project" do
               let(:argv) { ["--help", TestProjects::PATH_TO_MUDDY_PROJECT] }
-              it_behaves_like "help writter"
+              it_behaves_like "printing help"
             end
           end
 
           context "when print is requested" do
-            shared_examples "a dependency printer" do
+            shared_examples "printing dependencies" do
               it { expect(result).to be_truthy }
               it { expect(messages.length).to be > 1 }
               it { expect(messages.last).to match(/#{dependency_summary(2, 1)}/) }
@@ -86,12 +87,32 @@ module Mudguard
 
             context "with -p" do
               let(:argv) { ["-p", TestProjects::PATH_TO_CLEAN_PROJECT] }
-              it_behaves_like "a dependency printer"
+              it_behaves_like "printing dependencies"
             end
 
             context "with --print" do
               let(:argv) { ["--print", TestProjects::PATH_TO_CLEAN_PROJECT] }
-              it_behaves_like "a dependency printer"
+              it_behaves_like "printing dependencies"
+            end
+          end
+
+          context "when compressed output" do
+            shared_examples "omitting duplicates" do
+              it { expect(result).to be_falsey }
+              it "prints dependeny only once" do
+                expect(messages.select { |m| m =~ /^::B->::A::Klass not allowed$/ }.length)
+                  .to eq(1)
+              end
+            end
+
+            context "with -c" do
+              let(:argv) { ["-c", TestProjects::PATH_TO_MUDDY_PROJECT] }
+              it_behaves_like "omitting duplicates"
+            end
+
+            context "with --compressed" do
+              let(:argv) { ["--compressed", TestProjects::PATH_TO_MUDDY_PROJECT] }
+              it_behaves_like "omitting duplicates"
             end
           end
         end

@@ -15,19 +15,23 @@ module Mudguard
 
       def check(dependencies)
         select_dependencies(dependencies) do |dependency, is_allowed|
-          @notification.add(dependency_not_allowed(dependency)) unless is_allowed
+          add_message(dependency, dependency_not_allowed(dependency.dependency)) unless is_allowed
           !is_allowed
         end
       end
 
       def print_allowed(dependencies)
         select_dependencies(dependencies) do |dependency, is_allowed|
-          @notification.add(dependency_allowed(dependency)) if is_allowed
+          add_message(dependency, dependency_allowed(dependency.dependency)) if is_allowed
           is_allowed
         end
       end
 
       private
+
+      def add_message(dependency, message)
+        @notification.add(dependency.location, message)
+      end
 
       def select_dependencies(dependencies)
         dependencies.select do |dependency|
