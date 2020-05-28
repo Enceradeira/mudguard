@@ -23,7 +23,7 @@ module Mudguard
           it { is_expected.to be_truthy }
         end
 
-        context "when MudguardFile missing" do
+        context "when .mudguard.yml missing" do
           let(:project) { TestProjects::PATH_TO_EMPTY_DIR }
           it "raises error " do
             expect { mudguard.check(project, notification) }.to raise_error(Mudguard::Domain::Error)

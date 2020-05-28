@@ -16,3 +16,4 @@
 
 # Ignore pkg (gem dir)
 /pkg
+/tmp
