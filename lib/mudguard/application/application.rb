@@ -11,22 +11,18 @@ module Mudguard
   module Application
     class << self
       def check(project_path, notification)
-        policy_file = load_policy_file(project_path)
-        policies = load_policies(policy_file)
-        policies.check(load_project(project_path), notification)
+        project = load_project(project_path)
+        policies = project.policies
+        policies.check(project.all_sources, notification)
       end
 
       def print_allowed_dependencies(project_path, notification)
-        policy_file = load_policy_file(project_path)
-        policies = load_policies(policy_file)
-        policies.print_allowed_dependencies(load_project(project_path), notification)
+        project = load_project(project_path)
+        policies = project.policies
+        policies.print_allowed_dependencies(project.all_sources, notification)
       end
 
       private
-
-      def load_policies(policy_file)
-        Mudguard::Domain::Policies.new(policies: policy_file.allowed_dependencies)
-      end
 
       def load_policy_file(project_path)
         policy_file_path = File.expand_path(".mudguard.yml", project_path)
@@ -35,7 +31,8 @@ module Mudguard
 
       def load_project(project_path)
         sources = Infrastructure::Persistence::RubyFiles.all(project_path)
-        Domain::Project.new(sources: sources).all_sources
+        policy_file = load_policy_file(project_path)
+        Domain::Project.new(sources: sources, policy_file: policy_file)
       end
     end
   end
