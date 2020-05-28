@@ -17,7 +17,8 @@ module Mudguard
               raise Mudguard::Domain::Error, "expected policy file #{policy_file} doesn't exists"
             end
 
-            yaml = YAML.load(File.read(policy_file), symbolize_names: true) || {}
+            yaml_file = File.read(policy_file)
+            yaml = YAML.safe_load(yaml_file, [Symbol], [], policy_file, symbolize_names: true) || {}
 
             PolicyFile.new(yml: yaml)
           rescue Psych::SyntaxError => e
@@ -40,7 +41,7 @@ module Mudguard
         end
 
         def unsymbolize(dependency)
-          if dependency.kind_of?(Symbol)
+          if dependency.is_a?(Symbol)
             ":#{dependency}"
           else
             dependency
