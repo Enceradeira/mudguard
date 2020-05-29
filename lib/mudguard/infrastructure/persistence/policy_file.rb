@@ -22,36 +22,31 @@ module Mudguard
             yaml_file = File.read(policy_file)
             yaml = YAML.safe_load(yaml_file, [Symbol], [], policy_file) || {}
 
-            PolicyFile.new(yml: yaml, project_path: project_path)
+            create_scopes(project_path, yaml)
           rescue Psych::SyntaxError => e
             raise Mudguard::Domain::Error, "#{policy_file} is invalid (#{e.message})"
           end
 
           private
 
+          def create_scopes(project_path, yml)
+            yml.map do |scope|
+              Domain::Scope.new(name: scope[0],
+                                dependencies: (scope[1] || []).map(&method(:unsymbolize)),
+                                sources: RubyFiles.select(project_path, patterns: [scope[0]]))
+            end
+          end
+
+          def unsymbolize(dependency)
+            if dependency.is_a?(Symbol)
+              ":#{dependency}"
+            else
+              dependency
+            end
+          end
+
           def only_comment?(line)
             line.match(/^\w*#/)
-          end
-        end
-
-        def initialize(yml:, project_path:)
-          @yml = yml
-          @project_path = project_path
-        end
-
-        def scopes
-          @scopes ||= @yml.map do |scope|
-            Domain::Scope.new(name: scope[0],
-                              dependencies: (scope[1] || []).map(&method(:unsymbolize)),
-                              sources: RubyFiles.select(@project_path, patterns: [scope[0]]))
-          end
-        end
-
-        def unsymbolize(dependency)
-          if dependency.is_a?(Symbol)
-            ":#{dependency}"
-          else
-            dependency
           end
         end
       end

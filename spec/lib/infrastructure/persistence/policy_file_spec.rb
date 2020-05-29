@@ -8,7 +8,6 @@ module Mudguard
   module Infrastructure
     module Persistence
       RSpec.describe PolicyFile do
-        subject(:file) { PolicyFile.read(project_path) }
         let(:project_path) { File.expand_path("policy_file_project", __dir__) }
         let(:file_path) { File.join(project_path, ".mudguard.yml") }
         let(:project_sources) do
@@ -16,8 +15,8 @@ module Mudguard
         end
         before { File.delete(file_path) if File.exist?(file_path) }
 
-        describe "#scopes" do
-          subject(:scopes) { file.scopes }
+        describe ".read" do
+          subject(:scopes) { PolicyFile.read(project_path) }
           context "and file is empty" do
             before { FileUtils.touch(file_path) }
             it { expect(scopes).to be_empty }
@@ -61,20 +60,18 @@ module Mudguard
           end
         end
 
-        describe ".read" do
-          context "when file not exists" do
-            it { expect { PolicyFile.read(project_path) }.to raise_error(Mudguard::Domain::Error) }
-          end
+        context "when file not exists" do
+          it { expect { PolicyFile.read(project_path) }.to raise_error(Mudguard::Domain::Error) }
+        end
 
-          context "when file contains tabulator" do
-            before { File.write(file_path, "\tDependencies:[]") }
-            it { expect { PolicyFile.read(project_path) }.to raise_error(Mudguard::Domain::Error) }
-          end
+        context "when file contains tabulator" do
+          before { File.write(file_path, "\tDependencies:[]") }
+          it { expect { PolicyFile.read(project_path) }.to raise_error(Mudguard::Domain::Error) }
+        end
 
-          context "when file is empty" do
-            before { File.write(file_path, "") }
-            it { expect(PolicyFile.read(project_path)).not_to be_nil }
-          end
+        context "when file is empty" do
+          before { File.write(file_path, "") }
+          it { expect(PolicyFile.read(project_path)).to be_empty }
         end
       end
     end

@@ -24,8 +24,8 @@ module Mudguard
       private
 
       def create_policies(project_path)
-        policy_file = Infrastructure::Persistence::PolicyFile.read(project_path)
-        policies = Domain::Policies.new(scopes: policy_file.scopes)
+        scopes = Infrastructure::Persistence::PolicyFile.read(project_path)
+        policies = Domain::Policies.new(scopes: scopes)
         yield policies
       end
     end
