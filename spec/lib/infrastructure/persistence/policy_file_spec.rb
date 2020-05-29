@@ -29,7 +29,7 @@ module Mudguard
             it { expect(allowed_dependencies).to be_empty }
           end
 
-          context "when file has dependencies" do
+          context "when file has dependencies key" do
             before { File.write(file_path, "Dependencies:\n - a->b") }
             it { expect(allowed_dependencies).to match_array(["a->b"]) }
           end
@@ -37,6 +37,19 @@ module Mudguard
           context "when dependency looks like a symbol" do
             before { File.write(file_path, "Dependencies:\n - ::a->::b") }
             it { expect(allowed_dependencies).to match_array(["::a->::b"]) }
+          end
+        end
+
+        describe "#excluded_files" do
+          subject(:excluded_files) { file.excluded_files }
+          context "when file has exclude key" do
+            before { File.write(file_path, "Exclude:\n- .\\test\\*.rb") }
+            it { expect(excluded_files).to match_array([".\\test\\*.rb"]) }
+          end
+
+          context "when file lacks exclude key" do
+            before { File.write(file_path, "") }
+            it { expect(excluded_files).to be_empty }
           end
         end
 

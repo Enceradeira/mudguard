@@ -40,6 +40,10 @@ module Mudguard
           (@yml[:Dependencies] || []).map(&method(:unsymbolize))
         end
 
+        def excluded_files
+          @yml[:Exclude] || []
+        end
+
         def unsymbolize(dependency)
           if dependency.is_a?(Symbol)
             ":#{dependency}"

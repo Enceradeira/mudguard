@@ -19,6 +19,14 @@ module Mudguard
         @code == other.instance_eval { @code } && @location == other.instance_eval { @location }
       end
 
+      def hash
+        @location.hash
+      end
+
+      def eql?(other)
+        @location.eql?(other.instance_eval { @location })
+      end
+
       def inspect
         @location
       end
@@ -33,6 +41,10 @@ module Mudguard
         visitor = ConstVisitor.new
         visit_ast(visitor)
         visitor.consts
+      end
+
+      def location?(glob)
+        @location == glob
       end
 
       private
