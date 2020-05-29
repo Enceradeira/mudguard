@@ -36,7 +36,7 @@ module Mudguard
             context "with clean project" do
               let(:project_dir) { TestProjects::PATH_TO_CLEAN_PROJECT }
               it { expect(result).to be_truthy }
-              it { expect(messages).to eq([summary(2, 0)]) }
+              it { expect(messages).to eq([summary(3, 0)]) }
             end
 
             context "without any arguments" do
@@ -82,7 +82,7 @@ module Mudguard
             shared_examples "printing dependencies" do
               it { expect(result).to be_truthy }
               it { expect(messages.length).to be > 1 }
-              it { expect(messages.last).to match(/#{dependency_summary(2, 1)}/) }
+              it { expect(messages.last).to match(/#{dependency_summary(3, 2)}/) }
             end
 
             context "with -p" do

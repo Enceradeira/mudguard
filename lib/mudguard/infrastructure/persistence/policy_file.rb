@@ -3,6 +3,7 @@
 require "yaml"
 require_relative "../../domain/policies"
 require_relative "../../domain/error"
+require_relative "../../domain/scope"
 
 module Mudguard
   module Infrastructure
@@ -10,7 +11,8 @@ module Mudguard
       # A file containing the Mudguard-Policies
       class PolicyFile
         class << self
-          def read(policy_file)
+          def read(project_path)
+            policy_file = File.join(project_path, ".mudguard.yml")
             policy_exists = File.exist?(policy_file)
 
             unless policy_exists
@@ -18,9 +20,9 @@ module Mudguard
             end
 
             yaml_file = File.read(policy_file)
-            yaml = YAML.safe_load(yaml_file, [Symbol], [], policy_file, symbolize_names: true) || {}
+            yaml = YAML.safe_load(yaml_file, [Symbol], [], policy_file) || {}
 
-            PolicyFile.new(yml: yaml)
+            PolicyFile.new(yml: yaml, project_path: project_path)
           rescue Psych::SyntaxError => e
             raise Mudguard::Domain::Error, "#{policy_file} is invalid (#{e.message})"
           end
@@ -32,16 +34,17 @@ module Mudguard
           end
         end
 
-        def initialize(yml:)
+        def initialize(yml:, project_path:)
           @yml = yml
+          @project_path = project_path
         end
 
-        def allowed_dependencies
-          (@yml[:Dependencies] || []).map(&method(:unsymbolize))
-        end
-
-        def excluded_files
-          @yml[:Exclude] || []
+        def scopes
+          @scopes ||= @yml.map do |scope|
+            Domain::Scope.new(name: scope[0],
+                              dependencies: (scope[1] || []).map(&method(:unsymbolize)),
+                              sources: RubyFiles.select(@project_path, patterns: [scope[0]]))
+          end
         end
 
         def unsymbolize(dependency)

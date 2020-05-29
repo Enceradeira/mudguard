@@ -17,3 +17,6 @@
 # Ignore pkg (gem dir)
 /pkg
 /tmp
+
+# Following file is dynamically created while running tests
+/spec/lib/infrastructure/persistence/policy_file_project/.mudguard.yml

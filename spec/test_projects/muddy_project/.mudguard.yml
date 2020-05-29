@@ -1,4 +1,4 @@
 # This is a comment
 
-Dependencies:
+"./**/*.rb":
   - A -> B

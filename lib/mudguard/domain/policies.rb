@@ -10,12 +10,12 @@ module Mudguard
     class Policies
       include Texts
 
-      def initialize(policies: [])
-        @policies = policies
+      def initialize(scopes: [])
+        @scopes = scopes
       end
 
-      def check(sources, notification)
-        result = analyse(sources, :check, notification)
+      def check(notification)
+        result = analyse(:check, notification)
 
         count = result[:sources_count]
         violations = result[:analyser_count]
@@ -24,8 +24,8 @@ module Mudguard
         violations.zero?
       end
 
-      def print_allowed_dependencies(sources, notification)
-        result = analyse(sources, :print_allowed, notification)
+      def print_allowed_dependencies(notification)
+        result = analyse(:print_allowed, notification)
 
         count = result[:sources_count]
         violations = result[:analyser_count]
@@ -35,13 +35,15 @@ module Mudguard
 
       private
 
-      def analyse(sources, method, notification)
-        analyser = Dependencies.new(policies: @policies, notification: notification)
-        consts = Consts.new(sources: sources)
-        sources.each_with_object(sources_count: 0, analyser_count: 0) do |source, result|
-          dependencies = source.find_mod_dependencies(consts)
-          result[:sources_count] += 1
-          result[:analyser_count] += analyser.send(method, dependencies)
+      def analyse(method, notification)
+        consts = Consts.new(sources: @scopes.flat_map(&:sources))
+        @scopes.each_with_object(sources_count: 0, analyser_count: 0) do |scope, scope_result|
+          scope.sources.each_with_object(scope_result) do |source, source_result|
+            analyser = Dependencies.new(policies: scope.dependencies, notification: notification)
+            dependencies = source.find_mod_dependencies(consts)
+            source_result[:sources_count] += 1
+            source_result[:analyser_count] += analyser.send(method, dependencies)
+          end
         end
       end
     end

@@ -10,7 +10,7 @@ module Mudguard
 
       describe "#check" do
         subject(:result_and_messages) do
-          result = Policies.new(policies: policies).check(sources, notification)
+          result = Policies.new(scopes: scopes).check(notification)
           { result: result, messages: notification.messages }
         end
         subject(:result) { result_and_messages[:result] }
@@ -52,6 +52,7 @@ CODE
 CODE
           end
           let(:policies) { ["::A->::A::B::D"] }
+          let(:scopes) { [Scope.new(name: "my scope", sources: sources, dependencies: policies)] }
 
           it { expect(result).to be_falsey }
           it "generates messages" do
@@ -64,7 +65,7 @@ CODE
 
       describe "#print_allowed_dependencies" do
         subject(:messages) do
-          Policies.new(policies: policies).print_allowed_dependencies(sources, notification)
+          Policies.new(scopes: scopes).print_allowed_dependencies(notification)
           notification.messages
         end
         let(:sources) { [source1, source2] }
@@ -88,6 +89,7 @@ CODE
 CODE
         end
         let(:policies) { %w[::A->::B::C ::B->::B::D] }
+        let(:scopes) { [Scope.new(name: "my scope", sources: sources, dependencies: policies)] }
 
         it "generates messages" do
           message1 = "#{file1}:3 #{dependency_allowed('::B->::B::D::C')}"

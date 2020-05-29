@@ -1,6 +1,9 @@
 # This is a comment
-Exclude:
-  - 'excluded_files/**/*.rb'
 
-Dependencies:
+'excluded_files/**/*.rb':
+  - .* # Everything allowed
+
+'./*.rb':
   - ::A -> ::B # A can only depend on B
+
+
