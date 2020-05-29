@@ -8,7 +8,7 @@ module Mudguard
       subject(:consts) { Consts.new(sources: sources) }
       describe "#resolve" do
         context "when on source" do
-          let(:sources) { [Source.new(code_loader: -> { code })] }
+          let(:sources) { [Source.new(location: "test1.rb", code_loader: -> { code })] }
           let(:code) do
             <<CODE
   class C
@@ -78,7 +78,8 @@ CODE
 
         context "when two sources" do
           let(:sources) do
-            [Source.new(code_loader: -> { code1 }), Source.new(code_loader: -> { code2 })]
+            [Source.new(location: "test1.rb", code_loader: -> { code1 }),
+             Source.new(location: "test2.rb", code_loader: -> { code2 })]
           end
           let(:code1) do
             <<CODE

@@ -10,7 +10,7 @@ module Mudguard
   module Domain
     # Represents a Ruby source file
     class Source
-      def initialize(location: nil, code_loader:)
+      def initialize(location:, code_loader: -> { "" })
         @code_loader = code_loader
         @location = location
       end
