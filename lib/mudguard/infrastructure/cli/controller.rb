@@ -9,7 +9,7 @@ module Mudguard
     module Cli
       # Parses the cli arguments
       class Controller
-        def initialize(view:) # rubocop:disable Layout/MethodLength
+        def initialize(view:) # rubocop:disable Metrics/MethodLength
           @cmd = :analyse
           @view = view
           @display_opts = {
@@ -30,7 +30,7 @@ module Mudguard
           end
         end
 
-        def parse!(argv) # rubocop:disable Layout/MethodLength
+        def parse!(argv) # rubocop:disable Metrics/MethodLength
           directories = @parser.parse!(argv)
 
           case @cmd
