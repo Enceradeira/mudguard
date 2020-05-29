@@ -39,7 +39,7 @@ module Mudguard
         consts = Consts.new(sources: @scopes.flat_map(&:sources))
         @scopes.each_with_object(sources_count: 0, analyser_count: 0) do |scope, scope_result|
           scope.sources.each_with_object(scope_result) do |source, source_result|
-            analyser = Dependencies.new(policies: scope.dependencies, notification: notification)
+            analyser = Dependencies.new(policies: scope.policies, notification: notification)
             dependencies = source.find_mod_dependencies(consts)
             source_result[:sources_count] += 1
             source_result[:analyser_count] += analyser.send(method, dependencies)

@@ -52,7 +52,7 @@ CODE
 CODE
           end
           let(:policies) { ["::A->::A::B::D"] }
-          let(:scopes) { [Scope.new(name: "my scope", sources: sources, dependencies: policies)] }
+          let(:scopes) { [Scope.new(name: "my scope", sources: sources, policies: policies)] }
 
           it { expect(result).to be_falsey }
           it "generates messages" do
@@ -89,7 +89,7 @@ CODE
 CODE
         end
         let(:policies) { %w[::A->::B::C ::B->::B::D] }
-        let(:scopes) { [Scope.new(name: "my scope", sources: sources, dependencies: policies)] }
+        let(:scopes) { [Scope.new(name: "my scope", sources: sources, policies: policies)] }
 
         it "generates messages" do
           message1 = "#{file1}:3 #{dependency_allowed('::B->::B::D::C')}"

@@ -32,7 +32,7 @@ module Mudguard
           def create_scopes(project_path, yml)
             yml.map do |scope|
               Domain::Scope.new(name: scope[0],
-                                dependencies: (scope[1] || []).map(&method(:unsymbolize)),
+                                policies: (scope[1] || []).map(&method(:unsymbolize)),
                                 sources: RubyFiles.select(project_path, patterns: [scope[0]]))
             end
           end

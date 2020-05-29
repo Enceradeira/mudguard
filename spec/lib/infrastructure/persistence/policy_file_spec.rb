@@ -37,7 +37,7 @@ module Mudguard
             it "returns scope with dependencies" do
               expect(scopes).to match_array([Domain::Scope.new(name: "./**/*.rb",
                                                                sources: project_sources,
-                                                               dependencies: ["a->b"])])
+                                                               policies: ["a->b"])])
             end
           end
 
@@ -46,7 +46,7 @@ module Mudguard
             it "returns dependencies as string" do
               expect(scopes).to match_array([Domain::Scope.new(name: "*.rb",
                                                                sources: project_sources,
-                                                               dependencies: ["::a->::b"])])
+                                                               policies: ["::a->::b"])])
             end
           end
 
@@ -55,7 +55,7 @@ module Mudguard
             it "returns dependencies as string" do
               expect(scopes).to match_array([Domain::Scope.new(name: "*.rb",
                                                                sources: project_sources,
-                                                               dependencies: [])])
+                                                               policies: [])])
             end
           end
         end
