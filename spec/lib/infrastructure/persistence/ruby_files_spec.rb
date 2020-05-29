@@ -23,34 +23,30 @@ module Mudguard
             it { expect(ruby_files.any?).to be_falsey }
           end
 
-          context "without pattern" do
-            subject(:ruby_files) { RubyFiles.select(project_path) }
+          context "when hierarchical project" do
             let(:project_path) { TestProjects::PATH_TO_HIERARCHICAL_PROJECT }
-            let(:files_in_path) { %w[./root.rb ./a/a.rb ./a/b/b.rb] }
             let(:sources_in_path) do
               files_in_path.map do |f|
                 path = File.join(project_path, f)
-                Mudguard::Domain::Source.new(location: f, code: File.read(path))
+                Mudguard::Domain::Source.new(location: f, code_loader: -> { File.read(path) })
               end
             end
 
-            it { expect(ruby_files).to match_array(sources_in_path) }
-          end
+            context "without pattern" do
+              subject(:ruby_files) { RubyFiles.select(project_path) }
+              let(:files_in_path) { %w[./root.rb ./a/a.rb ./a/b/b.rb] }
 
-          context "with pattern" do
-            subject(:ruby_files) do
-              RubyFiles.select(project_path, patterns: %w[./**/*.mod ./a/a.txt])
+              it { expect(ruby_files).to match_array(sources_in_path) }
             end
-            let(:project_path) { TestProjects::PATH_TO_HIERARCHICAL_PROJECT }
-            let(:files_in_path) { %w[./a/b/b.mod ./a/a.txt] }
-            let(:sources_in_path) do
-              files_in_path.map do |f|
-                path = File.join(project_path, f)
-                Mudguard::Domain::Source.new(location: f, code: File.read(path))
+
+            context "with pattern" do
+              subject(:ruby_files) do
+                RubyFiles.select(project_path, patterns: %w[./**/*.mod ./a/a.txt])
               end
-            end
+              let(:files_in_path) { %w[./a/b/b.mod ./a/a.txt] }
 
-            it { expect(ruby_files).to match_array(sources_in_path) }
+              it { expect(ruby_files).to match_array(sources_in_path) }
+            end
           end
         end
       end

@@ -19,7 +19,7 @@ module Mudguard
         context "when two sources" do
           let(:sources) { [source1, source2] }
           let(:file1) { "./dir/source1.rb" }
-          let(:source1) { Source.new(location: file1, code: code1) }
+          let(:source1) { Source.new(location: file1, code_loader: -> { code1 }) }
           let(:code1) do
             <<CODE
   module A
@@ -39,7 +39,7 @@ module Mudguard
 CODE
           end
           let(:file2) { "./dir/source2.rb" }
-          let(:source2) { Source.new(location: file2, code: code2) }
+          let(:source2) { Source.new(location: file2, code_loader: -> { code2 }) }
           let(:code2) do
             <<CODE
   module B
@@ -69,7 +69,7 @@ CODE
         end
         let(:sources) { [source1, source2] }
         let(:file1) { "./dir/source1.rb" }
-        let(:source1) { Source.new(location: file1, code: code1) }
+        let(:source1) { Source.new(location: file1, code_loader: -> { code1 }) }
         let(:code1) do
           <<CODE
   module B
@@ -79,7 +79,7 @@ CODE
 CODE
         end
         let(:file2) { "./dir/source2.rb" }
-        let(:source2) { Source.new(location: file2, code: code2) }
+        let(:source2) { Source.new(location: file2, code_loader: -> { code2 }) }
         let(:code2) do
           <<CODE
   module A

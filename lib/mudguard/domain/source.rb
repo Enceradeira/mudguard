@@ -10,13 +10,13 @@ module Mudguard
   module Domain
     # Represents a Ruby source file
     class Source
-      def initialize(location: nil, code:)
-        @code = code
+      def initialize(location: nil, code_loader:)
+        @code_loader = code_loader
         @location = location
       end
 
       def ==(other)
-        @code == other.instance_eval { @code } && @location == other.instance_eval { @location }
+        @location == other.instance_eval { @location }
       end
 
       def hash
@@ -57,11 +57,15 @@ module Mudguard
 
       def create_ast
         begin
-          root = Parser::CurrentRuby.parse(@code)
+          root = Parser::CurrentRuby.parse(code)
         rescue Parser::SyntaxError
           return SYNTAX_ERROR
         end
         root.nil? ? SYNTAX_ERROR : root
+      end
+
+      def code
+        @code ||= @code_loader.call
       end
 
       def visit_ast(visitor)

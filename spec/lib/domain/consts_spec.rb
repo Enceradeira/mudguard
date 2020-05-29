@@ -8,7 +8,7 @@ module Mudguard
       subject(:consts) { Consts.new(sources: sources) }
       describe "#resolve" do
         context "when on source" do
-          let(:sources) { [Source.new(code: code)] }
+          let(:sources) { [Source.new(code_loader: -> { code })] }
           let(:code) do
             <<CODE
   class C
@@ -77,7 +77,9 @@ CODE
         end
 
         context "when two sources" do
-          let(:sources) { [Source.new(code: code1), Source.new(code: code2)] }
+          let(:sources) do
+            [Source.new(code_loader: -> { code1 }), Source.new(code_loader: -> { code2 })]
+          end
           let(:code1) do
             <<CODE
   module A

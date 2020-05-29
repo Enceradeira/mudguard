@@ -28,7 +28,8 @@ module Mudguard
             Dir.glob(ruby_files).map do |f|
               file_path_name = Pathname.new(f)
               diff_path = file_path_name.relative_path_from(project_path_name).to_s
-              Mudguard::Domain::Source.new(location: File.join("./", diff_path), code: File.read(f))
+              Mudguard::Domain::Source.new(location: File.join("./", diff_path),
+                                           code_loader: -> { File.read(f) })
             end
           end
         end

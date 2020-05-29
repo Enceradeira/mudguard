@@ -5,7 +5,7 @@ require "spec_helper"
 module Mudguard
   module Domain
     RSpec.describe Source do
-      subject(:source) { Source.new(location: "test.rb", code: code) }
+      subject(:source) { Source.new(location: "test.rb", code_loader: -> { code }) }
       describe "#find_consts" do
         subject(:consts) { source.find_consts }
         context "when code valid" do
