@@ -8,9 +8,14 @@ module Mudguard
       subject(:source) { Source.new(location: "test.rb", code_loader: -> { code }) }
       describe "#find_consts" do
         subject(:consts) { source.find_consts }
-        context "example 1" do
-          let(:code) { File.read(File.join(__dir__, "source_examples", "example1.rb")) }
+        let(:code) { File.read(File.join(__dir__, "source_examples", file)) }
+        context "when example 1" do
+          let(:file) { "example1.rb" }
           it { is_expected.to include("::A") }
+        end
+        context "when example 2" do
+          let(:file) { "example2.rb" }
+          it { is_expected.to include("::A::B") }
         end
       end
     end
