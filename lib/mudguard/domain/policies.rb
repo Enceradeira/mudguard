@@ -10,8 +10,8 @@ module Mudguard
     class Policies
       include Texts
 
-      def initialize(scopes: [])
-        @scopes = scopes
+      def initialize(source_policies: [])
+        @source_policies = source_policies
       end
 
       def check(notification)
@@ -36,14 +36,12 @@ module Mudguard
       private
 
       def analyse(method, notification)
-        consts = Consts.new(sources: @scopes.flat_map(&:sources))
-        @scopes.each_with_object(sources_count: 0, analyser_count: 0) do |scope, scope_result|
-          scope.sources.each_with_object(scope_result) do |source, source_result|
-            analyser = Dependencies.new(policies: scope.policies, notification: notification)
-            dependencies = source.find_mod_dependencies(consts)
-            source_result[:sources_count] += 1
-            source_result[:analyser_count] += analyser.send(method, dependencies)
-          end
+        consts = Consts.new(sources: @source_policies.map(&:source))
+        @source_policies.each_with_object(sources_count: 0, analyser_count: 0) do |sp, result|
+          analyser = Dependencies.new(policies: sp.policies, notification: notification)
+          dependencies = sp.source.find_mod_dependencies(consts)
+          result[:sources_count] += 1
+          result[:analyser_count] += analyser.send(method, dependencies)
         end
       end
     end

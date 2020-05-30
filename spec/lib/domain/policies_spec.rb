@@ -10,14 +10,14 @@ module Mudguard
 
       describe "#check" do
         subject(:result_and_messages) do
-          result = Policies.new(scopes: scopes).check(notification)
+          result = Policies.new(source_policies: source_policies).check(notification)
           { result: result, messages: notification.messages }
         end
         subject(:result) { result_and_messages[:result] }
         subject(:messages) { result_and_messages[:messages] }
 
         context "when two sources" do
-          let(:sources) { [source1, source2] }
+          let(:source_policies) { [source_policies1, source_policies2] }
           let(:file1) { "./dir/source1.rb" }
           let(:source1) { Source.new(location: file1, code_loader: -> { code1 }) }
           let(:code1) do
@@ -38,6 +38,9 @@ module Mudguard
   end
 CODE
           end
+          let(:policies1) { ["::A->::A::B::D"] }
+          let(:source_policies1) { SourcePolicies.new(source: source1, policies: policies1) }
+
           let(:file2) { "./dir/source2.rb" }
           let(:source2) { Source.new(location: file2, code_loader: -> { code2 }) }
           let(:code2) do
@@ -51,8 +54,8 @@ CODE
   end
 CODE
           end
-          let(:policies) { ["::A->::A::B::D"] }
-          let(:scopes) { [Scope.new(name: "my scope", sources: sources, policies: policies)] }
+          let(:policies2) { ["::A->::A::B::D"] }
+          let(:source_policies2) { SourcePolicies.new(source: source2, policies: policies2) }
 
           it { expect(result).to be_falsey }
           it "generates messages" do
@@ -65,10 +68,11 @@ CODE
 
       describe "#print_allowed_dependencies" do
         subject(:messages) do
-          Policies.new(scopes: scopes).print_allowed_dependencies(notification)
+          Policies.new(source_policies: source_policies).print_allowed_dependencies(notification)
           notification.messages
         end
-        let(:sources) { [source1, source2] }
+        let(:source_policies) { [source_policies1, source_policies2] }
+        let(:policies) { %w[::A->::B::C ::B->::B::D] }
         let(:file1) { "./dir/source1.rb" }
         let(:source1) { Source.new(location: file1, code_loader: -> { code1 }) }
         let(:code1) do
@@ -79,6 +83,8 @@ CODE
   end
 CODE
         end
+        let(:source_policies1) { SourcePolicies.new(source: source1, policies: policies) }
+
         let(:file2) { "./dir/source2.rb" }
         let(:source2) { Source.new(location: file2, code_loader: -> { code2 }) }
         let(:code2) do
@@ -88,8 +94,8 @@ CODE
   end
 CODE
         end
-        let(:policies) { %w[::A->::B::C ::B->::B::D] }
-        let(:scopes) { [Scope.new(name: "my scope", sources: sources, policies: policies)] }
+        let(:source_policies2) { SourcePolicies.new(source: source2, policies: policies) }
+        let(:source_policies) { [source_policies1, source_policies2] }
 
         it "generates messages" do
           message1 = "#{file1}:3 #{dependency_allowed('::B->::B::D::C')}"

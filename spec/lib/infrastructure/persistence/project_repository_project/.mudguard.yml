@@ -1,0 +1,12 @@
+'**/*.rb':
+  - Global-Policy
+
+'./subdir1/*.rb':
+  - Subdir1-Policy-1
+  - Subdir1-Policy-2
+
+'./subdir1/file*.rb':
+  - Subdir1-Policy-1
+
+'./subdir2/*.rb':
+  - Subdir2-Policy

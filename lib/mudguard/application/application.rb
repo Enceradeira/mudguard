@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "../infrastructure/persistence/policy_file"
-require_relative "../infrastructure/persistence/ruby_files"
+require_relative "../infrastructure/persistence/project_repository"
 require_relative "../domain/policies"
 
 # Contains methods to check if your project is a bit muddy
@@ -24,8 +23,9 @@ module Mudguard
       private
 
       def create_policies(project_path)
-        scopes = Infrastructure::Persistence::PolicyFile.read(project_path)
-        policies = Domain::Policies.new(scopes: scopes)
+        repo = Infrastructure::Persistence::ProjectRepository
+        source_policies = repo.load_source_policies(project_path)
+        policies = Domain::Policies.new(source_policies: source_policies)
         yield policies
       end
     end
