@@ -17,6 +17,10 @@ module Mudguard
           let(:file) { "example2.rb" }
           it { is_expected.to include("::A::B") }
         end
+        context "when example 3 " do
+          let(:file) { "example3.rb" }
+          it { is_expected.to include("::Dependency") }
+        end
       end
     end
   end

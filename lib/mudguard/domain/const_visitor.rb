@@ -13,11 +13,7 @@ module Mudguard
       def visit_dependency(_, __, ___); end # rubocop:disable Naming/MethodParameterName
 
       def visit_const_declaration(_location, const_name, module_name)
-        @consts << if module_name.empty?
-                     const_name
-                   else
-                     "#{module_name}::#{const_name}"
-                   end
+        @consts << "#{module_name}#{const_name}"
       end
     end
   end

@@ -51,10 +51,9 @@ module Mudguard
 
       def process_module(node, visitor, module_name)
         const_name = find_const_name(node.children[0].children)
-        const_name = module_name.empty? ? "::#{const_name}" : const_name
         visitor.visit_const_declaration(describe_location(node), const_name, module_name)
 
-        module_name = module_name.empty? ? const_name : "#{module_name}::#{const_name}"
+        module_name = "#{module_name}#{const_name}"
         node.children.drop(1).reject(&:nil?).each do |child_node|
           process_node(child_node, visitor, module_name)
         end
@@ -67,11 +66,7 @@ module Mudguard
         first_child_children = first_child.respond_to?(:children) ? first_child.children : nil
         module_name = find_const_name(first_child_children)
         const_name = children[1].to_s
-        if module_name.nil?
-          const_name
-        else
-          "#{module_name}::#{const_name}"
-        end
+        "#{module_name}::#{const_name}"
       end
 
       def type?(type)

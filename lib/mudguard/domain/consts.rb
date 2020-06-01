@@ -28,7 +28,7 @@ module Mudguard
         else
           # analyse module hierarchy to find fully qualified const name
           # resolve_in_modules(const_name, path)
-          const_path = const_name.split(SEPARATOR)
+          const_path = const_name.split(SEPARATOR).drop(1)
           find_const_deeper("", path, @consts, const_path) || qualified_path(const_name)
         end
       end

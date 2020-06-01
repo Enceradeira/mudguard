@@ -45,34 +45,34 @@ module Mudguard
   end
 CODE
           end
-          it { expect(consts.resolve("", "C")).to eq("::C") }
-          it { expect(consts.resolve("", "B")).to eq("::B") }
-          it { expect(consts.resolve("::M", "M::B")).to eq("::M::B") }
-          it { expect(consts.resolve("::M", "B")).to eq("::M::B") }
-          it { expect(consts.resolve("", "X::Y")).to eq("::X::Y") }
-          it { expect(consts.resolve("::A", "X::Y")).to eq("::X::Y") }
-          it { expect(consts.resolve("::A::B::D", "X::Y")).to eq("::X::Y") }
-          it { expect(consts.resolve("::A::B::C::G", "B")).to eq("::A::B") }
-          it { expect(consts.resolve("::A::B::C", "B")).to eq("::A::B") }
-          it { expect(consts.resolve("::A::B", "B")).to eq("::A::B") }
-          it { expect(consts.resolve("::A", "B")).to eq("::A::B") }
-          it { expect(consts.resolve("::A::B::D::E", "D::E")).to eq("::A::B::D::E") }
-          it { expect(consts.resolve("::A::B::D::E", "B::D")).to eq("::A::B::D") }
-          it { expect(consts.resolve("::A::B::D::E", "B::C")).to eq("::A::B::C") }
-          it { expect(consts.resolve("::A::B::D::E", "B::C::G")).to eq("::A::B::C::G") }
-          it { expect(consts.resolve("::A::B::D", "B::C::G")).to eq("::A::B::C::G") }
-          it { expect(consts.resolve("::A::B", "B::C::G")).to eq("::A::B::C::G") }
-          it { expect(consts.resolve("::A::B", "C::G")).to eq("::A::B::C::G") }
-          it { expect(consts.resolve("::A::B", "G")).to eq("::G") }
-          it { expect(consts.resolve("::A", "A::B::D::G")).to eq("::A::B::D::G") }
-          it { expect(consts.resolve("::A::B::D", "G")).to eq("::A::B::D::G") }
-          it { expect(consts.resolve("::A::B::D::E", "D::G")).to eq("::A::B::D::G") }
-          it { expect(consts.resolve("::A::B::D", "D::G")).to eq("::A::B::D::G") }
-          it { expect(consts.resolve("::A::B", "D::G")).to eq("::A::B::D::G") }
-          it { expect(consts.resolve("::A", "D::G")).to eq("::A::D::G") }
-          it { expect(consts.resolve("", "D::G")).to eq("::D::G") }
-          it { expect(consts.resolve("::X", "A")).to eq("::A") }
-          it { expect(consts.resolve("::X::Y", "A")).to eq("::A") }
+          it { expect(consts.resolve("", "::C")).to eq("::C") }
+          it { expect(consts.resolve("", "::B")).to eq("::B") }
+          it { expect(consts.resolve("::M", "::M::B")).to eq("::M::B") }
+          it { expect(consts.resolve("::M", "::B")).to eq("::M::B") }
+          it { expect(consts.resolve("", "::X::Y")).to eq("::X::Y") }
+          it { expect(consts.resolve("::A", "::X::Y")).to eq("::X::Y") }
+          it { expect(consts.resolve("::A::B::D", "::X::Y")).to eq("::X::Y") }
+          it { expect(consts.resolve("::A::B::C::G", "::B")).to eq("::A::B") }
+          it { expect(consts.resolve("::A::B::C", "::B")).to eq("::A::B") }
+          it { expect(consts.resolve("::A::B", "::B")).to eq("::A::B") }
+          it { expect(consts.resolve("::A", "::B")).to eq("::A::B") }
+          it { expect(consts.resolve("::A::B::D::E", "::D::E")).to eq("::A::B::D::E") }
+          it { expect(consts.resolve("::A::B::D::E", "::B::D")).to eq("::A::B::D") }
+          it { expect(consts.resolve("::A::B::D::E", "::B::C")).to eq("::A::B::C") }
+          it { expect(consts.resolve("::A::B::D::E", "::B::C::G")).to eq("::A::B::C::G") }
+          it { expect(consts.resolve("::A::B::D", "::B::C::G")).to eq("::A::B::C::G") }
+          it { expect(consts.resolve("::A::B", "::B::C::G")).to eq("::A::B::C::G") }
+          it { expect(consts.resolve("::A::B", "::C::G")).to eq("::A::B::C::G") }
+          it { expect(consts.resolve("::A::B", "::G")).to eq("::G") }
+          it { expect(consts.resolve("::A", "::A::B::D::G")).to eq("::A::B::D::G") }
+          it { expect(consts.resolve("::A::B::D", "::G")).to eq("::A::B::D::G") }
+          it { expect(consts.resolve("::A::B::D::E", "::D::G")).to eq("::A::B::D::G") }
+          it { expect(consts.resolve("::A::B::D", "::D::G")).to eq("::A::B::D::G") }
+          it { expect(consts.resolve("::A::B", "::D::G")).to eq("::A::B::D::G") }
+          it { expect(consts.resolve("::A", "::D::G")).to eq("::A::D::G") }
+          it { expect(consts.resolve("", "::D::G")).to eq("::D::G") }
+          it { expect(consts.resolve("::X", "::A")).to eq("::A") }
+          it { expect(consts.resolve("::X::Y", "::A")).to eq("::A") }
           it { expect { consts.resolve("::A::B", "") }.to raise_error(Error) }
         end
 
@@ -99,7 +99,7 @@ CODE
 CODE
           end
 
-          it { expect(consts.resolve("::A", "B::D")).to eq("::A::B::D") }
+          it { expect(consts.resolve("::A", "::B::D")).to eq("::A::B::D") }
         end
       end
     end
