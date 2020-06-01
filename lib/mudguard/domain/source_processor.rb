@@ -8,7 +8,13 @@ module Mudguard
         @location = location
       end
 
-      def process(node, visitor, module_name) # rubocop:disable Metrics/MethodLength
+      def process(node, visitor)
+        process_node(node, visitor, "")
+      end
+
+      private
+
+      def process_node(node, visitor, module_name) # rubocop:disable Metrics/MethodLength
         case node
         when type?(:module)
           process_module(node, visitor, module_name)
@@ -22,8 +28,6 @@ module Mudguard
           ignore_and_continue(node, visitor, module_name)
         end
       end
-
-      private
 
       def process_const_assignment(node, visitor, module_name)
         const_name = find_const_name(node.children)
@@ -42,7 +46,7 @@ module Mudguard
       def ignore_and_continue(node, visitor, module_name)
         return unless node.respond_to?(:children)
 
-        node.children.flat_map { |c| process(c, visitor, module_name) }
+        node.children.flat_map { |c| process_node(c, visitor, module_name) }
       end
 
       def process_module(node, visitor, module_name)
@@ -52,7 +56,7 @@ module Mudguard
 
         module_name = module_name.empty? ? const_name : "#{module_name}::#{const_name}"
         node.children.drop(1).reject(&:nil?).each do |child_node|
-          process(child_node, visitor, module_name)
+          process_node(child_node, visitor, module_name)
         end
       end
 

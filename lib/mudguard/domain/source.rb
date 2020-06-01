@@ -72,7 +72,7 @@ module Mudguard
       def visit_ast(visitor)
         return if ast == SYNTAX_ERROR
 
-        SourceProcessor.new(location: @location).process(ast, visitor, "")
+        SourceProcessor.new(location: @location).process(ast, visitor)
       end
     end
   end
