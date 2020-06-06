@@ -30,13 +30,17 @@ module Mudguard
       end
 
       def process_const_assignment(node, visitor, module_name)
-        is_explicit, const_name = find_const_name(node.children)
+        is_explicit, is_static, const_name = find_const_name(node.children)
+        return unless is_static
+
         visitor.visit_const_declaration(describe_location(node), const_name,
                                         is_explicit ? "" : module_name)
       end
 
       def process_const(node, visitor, module_name)
-        is_explicit, const_name = find_const_name(node.children)
+        is_explicit, is_static, const_name = find_const_name(node.children)
+        return unless is_static
+
         visitor.visit_dependency(describe_location(node), const_name,
                                  is_explicit ? "" : module_name)
       end
@@ -52,7 +56,9 @@ module Mudguard
       end
 
       def process_module(node, visitor, module_name)
-        is_explicit, const_name = find_const_name(node.children[0].children)
+        is_explicit, is_static, const_name = find_const_name(node.children[0].children)
+        return unless is_static
+
         visitor.visit_const_declaration(describe_location(node), const_name, module_name)
 
         module_name = "#{is_explicit ? '' : module_name}#{const_name}"
@@ -65,11 +71,17 @@ module Mudguard
         return [false, nil] if children.nil? || children.empty?
 
         first_child = children[0]
-        is_explicit = first_child.respond_to?(:type) && first_child.type == :cbase
+        is_explicit, is_static = find_const_type(first_child)
         first_child_children = first_child.respond_to?(:children) ? first_child.children : nil
-        _, module_name = find_const_name(first_child_children)
+        _, __, module_name = find_const_name(first_child_children)
         const_name = children[1].to_s
-        [is_explicit, "#{module_name}::#{const_name}"]
+        [is_explicit, is_static, "#{module_name}::#{const_name}"]
+      end
+
+      def find_const_type(first_child)
+        is_explicit = type?(:cbase).call(first_child)
+        is_static = is_explicit || first_child.nil? || type?(:const).call(first_child)
+        [is_explicit, is_static]
       end
 
       def type?(type)

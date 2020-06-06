@@ -26,6 +26,10 @@ module Mudguard
       describe "#find_mode_dependencies" do
         subject(:dependencies) { source.find_mod_dependencies(consts) }
         let(:consts) { Consts.new(sources: [source]) }
+        context "when example 1" do
+          let(:file) { "example1.rb" }
+          it { expect(dependencies).to be_empty }
+        end
         context "when example 4" do
           let(:file) { "example4.rb" }
           it { expect(dependencies).to include_dependency("test.rb:6", "::A::C->::D::E") }
