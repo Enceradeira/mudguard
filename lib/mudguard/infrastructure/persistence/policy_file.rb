@@ -15,7 +15,8 @@ module Mudguard
             policy_exists = File.exist?(policy_file)
 
             unless policy_exists
-              raise Mudguard::Domain::Error, "expected policy file #{policy_file} doesn't exists"
+              template_file = File.join(__dir__, ".mudguard.template.yml")
+              FileUtils.cp(template_file, policy_file)
             end
 
             read_yml(policy_file)

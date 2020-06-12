@@ -45,7 +45,13 @@ module Mudguard
           end
 
           context "when file not exists" do
-            it { expect { PolicyFile.read(project_path) }.to raise_error(Mudguard::Domain::Error) }
+            it "returns default rules" do
+              expect(file).not_to be_empty
+            end
+            it "creates files" do
+              PolicyFile.read(project_path)
+              expect(File.exist?(file_path)).to be_truthy
+            end
           end
 
           context "when file contains tabulator" do

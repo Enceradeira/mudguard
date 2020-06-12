@@ -20,3 +20,4 @@
 
 # Following file is dynamically created while running tests
 /spec/lib/infrastructure/persistence/policy_file_project/.mudguard.yml
+/spec/test_projects/project_without_mudguard_file/.mudguard.yml

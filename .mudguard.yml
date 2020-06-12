@@ -1,0 +1,6 @@
+'./**/*.rb':
+  # uncomment following lines to allow all dependencies
+  # - .*
+
+  # all code can depend on modules or constants defined in same module
+  - ^(::.+)(::[^:]+)* -> \1(::[^:]+)*$

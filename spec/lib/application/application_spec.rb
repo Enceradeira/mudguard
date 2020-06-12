@@ -23,15 +23,8 @@ module Mudguard
           it { is_expected.to be_truthy }
         end
 
-        context "when .mudguard.yml missing" do
-          let(:project) { TestProjects::PATH_TO_EMPTY_DIR }
-          it "raises error " do
-            expect { mudguard.check(project, notification) }.to raise_error(Mudguard::Domain::Error)
-          end
-        end
-
         context "when project can't be parsed" do
-          let(:project) { TestProjects::PATH_TO_PROJECT_WITH_INVALID_RUBY }
+          let(:project) { TestProjects::PATH_TO_PRJ_WITH_INVALID_RUBY }
           it { is_expected.to be_truthy }
         end
       end

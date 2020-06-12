@@ -13,5 +13,6 @@ module TestProjects
   PATH_TO_CLEAN_PROJECT = path_to("clean_project")
   PATH_TO_EMPTY_DIR = path_to("empty_dir")
   PATH_TO_HIERARCHICAL_PROJECT = path_to("hierarchical_project")
-  PATH_TO_PROJECT_WITH_INVALID_RUBY = path_to("project_with_invalid_ruby")
+  PATH_TO_PRJ_WITH_INVALID_RUBY = path_to("project_with_invalid_ruby")
+  PATH_TO_PRJ_WITHOUT_MUDG_FILE = path_to("project_without_mudguard_file")
 end
