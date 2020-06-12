@@ -32,7 +32,7 @@ $ cd my/cool/ruby/project
 $ mudguard
 ```
 
-Mudguard creates on it's first run a file called **.mudguard.yml** which is used to configure the **design policies** 
+Mudguard creates on it's first run a file called **.mudguard.yml** which is used to configure **design policies** 
 governing your code. A .mudguard.yml could look like:
 ```
 './**/*.rb': # all code
@@ -70,10 +70,10 @@ of `X -> Y` meaning "X depends on Y". See following examples:
 
 | Policy | matched Dependency|  Explanation |
 | --- | --- | --- |
-| ^::A -> ::B$ | `::A -> ::B` |Module A can depend on module or constant B |
-| ^::Infrastructure -> ::Rails$ | `::Infrastructure -> ::Rails` |Module Infrastructure can depend on Rails |
-| ^::Infrastructure(::[^:]+)* -> ::ActiveRecord$ | `::Infrastructure::Logger -> ::ActiveRecord` or `::Infrastructure::Persistence -> ::ActiveRecord`|Module Infrastructure and its submodules can depend on ActiveRecord |
-| .*   -> ::Exception$ | `::Api::Gateway` -> ::Exception or `::Logger -> ::Gateway` |Any module can depend on class Exception | 
+| `^::A -> ::B$` | `::A -> ::B` |Module A can depend on module or constant B |
+| `^::Infrastructure -> ::Rails$` | `::Infrastructure -> ::Rails` |Module Infrastructure can depend on Rails |
+| `^::Infrastructure(::[^:]+)* -> ::ActiveRecord$` | `::Infrastructure::Logger -> ::ActiveRecord` or `::Infrastructure::Persistence -> ::ActiveRecord`|Module Infrastructure and its submodules can depend on ActiveRecord |
+| `.*   -> ::Exception$` | `::Api::Gateway -> ::Exception` or `::Logger -> ::Gateway` |Any module can depend on class Exception | 
 
 Any dependency for which Mudguard doesn't find a matching policy is reported as an impermissible dependency.
 
