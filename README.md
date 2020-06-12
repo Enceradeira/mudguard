@@ -1,10 +1,16 @@
 # Mudguard
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/mudguard`. To experiment with that code, run `bin/console` for an interactive prompt.
+**Mudguard** is a Ruby static code analyzer that investigates the coupling of modules in your source code. Mudguard
+prevents your code from becoming a [Big ball of mud](http://www.laputan.org/mud/) and helps implementing and
+maintaining an intended design.
 
-TODO: Delete this and the text above, and describe your gem
+Mudguard is inspired by
+* [Rubocop](https://github.com/rubocop-hq/rubocop)
+* Clean Architecture by Robert C. Martin (ISBN-13: 978-0-13-449416-6)
+* having seen many larger code bases in a sorrow state
+* my inability to efficiently break up application code into gems or rails engines
 
-## Installation
+# Installation
 
 Add this line to your application's Gemfile:
 
@@ -20,19 +26,66 @@ Or install it yourself as:
 
     $ gem install mudguard
 
-## Usage
+## Quickstart
+```
+$ cd my/cool/ruby/project
+$ mudguard
+```
 
-TODO: Write usage instructions here
+Mudguard creates on it's first run a file called **.mudguard.yml** which is used to configure the **design policies** 
+governing your code. A .mudguard.yml could look like:
+```
+'./**/*.rb': # all code
+  # all code can depend on siblings in same module or class
+  - ^(::.+)(::[^:]+)* -> \1(::[^:]+)*$
+  # all code can depend on certain types
+  - .* -> ::(String|SecureRandom|Container|Time|Date|JSON|Object|Hash)$
 
-## Development
+  # in all code module Application can depend on module Domain
+  - ^::Application(::[^:]+)* -> ::(Domain)(::[^:]+)*$
+  # in all code module Infrastructure can depend on module Application
+  - ^::Infrastructure(::[^:]+)* -> ::(Application)(::[^:]+)*$
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+'spec/**/*.rb': # spec code
+  # Only in test code can we use RSpec, Timecop and Exception
+  - .* -> ::(RSpec|Timecop|Exception)$
+``` 
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+## The .mudguard.yml
+The .mudguard.yml defines scopes and policies. A policy defines which dependencies are inside that scope permissible:
+```
+scope1:
+    - policy 1
+    - policy 2
+scope2:
+    - policy 3
+```
+The **scope** is a [glob-pattern](https://en.wikipedia.org/wiki/Glob_(programming)) and defines to which files a set
+of policies apply. For example a value `lib/docker/**/*.rb` defines a scope containing all Ruby files inside 
+folder lib/docker. 
+
+A **policy** is a [regular expression](https://ruby-doc.org/core-2.5.1/Regexp.html) matching one or a set of 
+dependencies that are permissible inside that scope. Mudguard represents a **dependency** as a symbol in form 
+of `X -> Y` meaning "X depends on Y". See following examples:
+
+| Policy | matched Dependency|  Explanation |
+| --- | --- | --- |
+| ^::A -> ::B$ | `::A -> ::B` |Module A can depend on module or constant B |
+| ^::Infrastructure -> ::Rails$ | `::Infrastructure -> ::Rails` |Module Infrastructure can depend on Rails |
+| ^::Infrastructure(::[^:]+)* -> ::ActiveRecord$ | `::Infrastructure::Logger -> ::ActiveRecord` or `::Infrastructure::Persistence -> ::ActiveRecord`|Module Infrastructure and its submodules can depend on ActiveRecord |
+| .*   -> ::Exception$ | `::Api::Gateway` -> ::Exception or `::Logger -> ::Gateway` |Any module can depend on class Exception | 
+
+Any dependency for which Mudguard doesn't find a matching policy is reported as an impermissible dependency.
+
+## Outlook
+Using regular expressions as policies is very flexible but difficult to use. Furthermore certain patterns used in 
+the regular expressions do repeat. It might be useful to replace regular expressions in future with a specific language
+to describe permissible dependencies. Any thoughts on that?
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/mudguard. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/Enceradeira/mudguard.
+ This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
