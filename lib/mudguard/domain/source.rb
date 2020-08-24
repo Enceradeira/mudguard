@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
-require "parser/current"
+orig = $VERBOSE
+begin
+  $VERBOSE = nil # silence warning when ruby versions are not exactly matching
+  require "parser/current"
+ensure
+  $VERBOSE = orig
+end
+
 require_relative "dependency"
 require_relative "dependency_visitor"
 require_relative "const_visitor"
