@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mudguard (0.2.3)
+    mudguard (0.2.4)
       parser (~> 2.7)
       rake (~> 13.0)
 

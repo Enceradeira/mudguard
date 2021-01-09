@@ -8,11 +8,11 @@ module Mudguard
     class Consts
       def initialize(sources:)
         @consts = sources.flat_map(&:find_consts)
-                         .each_with_object(create_hash_of_hash) do |c, a|
+                         .each_with_object({}) do |c, a|
           path = split_hierarchy(c)
           const_name = path.last
           module_names = path.take(path.count - 1)
-          sub_module = module_names.reduce(a) { |h, m| h[m] }
+          sub_module = module_names.reduce(a) { |h, m| h.key?(m) ? h[m] : h[m] = {} }
           sub_module[const_name] = {} unless sub_module.key?(const_name)
         end
       end
@@ -36,12 +36,8 @@ module Mudguard
 
       SEPARATOR = "::"
 
-      def create_hash_of_hash
-        Hash.new { |h, k| h[k] = create_hash_of_hash }
-      end
-
       def find_const_deeper(current_module, remaining_modules, consts, const_path)
-        return if consts.nil? || consts.empty?
+        return if consts.nil?
 
         if remaining_modules.any?
           # Move deeper toward target module

@@ -17,6 +17,17 @@ module Mudguard
 
           it { expect(consts.resolve("::A", "::B::D")).to eq("::A::B::D") }
         end
+
+        context "when sub-module declared inline" do
+          let(:sources) do
+            [Source.new(location: "test1.rb", code_loader: -> { code1 }),
+             Source.new(location: "test2.rb", code_loader: -> { code2 })]
+          end
+          let(:code1) { "module A;end;class A::B::D;end" }
+          let(:code2) { "module A; allowed_dependency=B::D; end" }
+
+          it { expect(consts.resolve("::A", "::B::D")).to eq("::A::B::D") }
+        end
       end
     end
   end
