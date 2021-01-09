@@ -26,7 +26,7 @@ module Mudguard
           context "when it's ok" do
             let(:project) { TestProjects::PATH_TO_CLEAN_PROJECT }
             it { expect(exit_code).to be_success }
-            it { expect(std_out).to match(/#{summary(3, 0)}/) }
+            it { expect(std_out).to match(/#{summary(4, 0)}/) }
           end
         end
       end

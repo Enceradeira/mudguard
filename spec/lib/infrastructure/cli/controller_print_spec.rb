@@ -15,7 +15,7 @@ module Mudguard
             shared_examples "printing dependencies" do
               it { expect(result).to be_truthy }
               it { expect(messages.length).to be > 1 }
-              it { expect(messages.last).to match(/#{dependency_summary(3, 2)}/) }
+              it { expect(messages.last).to match(/#{dependency_summary(4, 2)}/) }
             end
 
             context "with -p" do

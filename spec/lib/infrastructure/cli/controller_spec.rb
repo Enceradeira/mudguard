@@ -28,7 +28,7 @@ module Mudguard
             context "with clean project" do
               let(:project_dir) { TestProjects::PATH_TO_CLEAN_PROJECT }
               it { expect(result).to be_truthy }
-              it { expect(messages).to eq([summary(3, 0)]) }
+              it { expect(messages).to eq([summary(4, 0)]) }
             end
 
             context "without any arguments" do

@@ -7,9 +7,8 @@ module Mudguard
     # Knows all constants of the project
     class Consts
       def initialize(sources:)
-        @consts = sources
-                  .flat_map(&:find_consts)
-                  .each_with_object(Hash.new { |h, k| h[k] = {} }) do |c, a|
+        @consts = sources.flat_map(&:find_consts)
+                         .each_with_object(create_hash_of_hash) do |c, a|
           path = split_hierarchy(c)
           const_name = path.last
           module_names = path.take(path.count - 1)
@@ -37,8 +36,12 @@ module Mudguard
 
       SEPARATOR = "::"
 
+      def create_hash_of_hash
+        Hash.new { |h, k| h[k] = create_hash_of_hash }
+      end
+
       def find_const_deeper(current_module, remaining_modules, consts, const_path)
-        return if consts.nil?
+        return if consts.nil? || consts.empty?
 
         if remaining_modules.any?
           # Move deeper toward target module

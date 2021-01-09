@@ -7,7 +7,7 @@ module Mudguard
     RSpec.describe Consts do
       subject(:consts) { Consts.new(sources: sources) }
       describe "#resolve" do
-        context "when on source" do
+        context "when one source" do
           let(:sources) { [Source.new(location: "test1.rb", code_loader: -> { code })] }
           let(:code) do
             <<CODE
