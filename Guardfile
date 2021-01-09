@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 rspec_options = {
-  cmd: "rspec",
+  cmd: "bundle exec rspec",
   notification: false,
   failed_mode: :focus
 }
