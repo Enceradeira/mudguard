@@ -48,6 +48,15 @@ module Mudguard
               it { expect(ruby_files).to match_array(sources_in_path) }
             end
           end
+
+          context "when project contains only directory with extension .rb" do
+            subject(:ruby_files) { RubyFiles.select(project_path) }
+            let(:project_path) do
+              File.expand_path("project_containing_dir_with_rb_extension", File.dirname(__FILE__))
+            end
+
+            it { expect(ruby_files).to be_empty }
+          end
         end
       end
     end

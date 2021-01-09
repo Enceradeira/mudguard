@@ -3,6 +3,9 @@
 'excluded_files/**/*.rb':
   - .* # Everything allowed
 
+'special_cases/**/*.rb':
+  - .* # Everything allowed
+
 './*.rb':
   - ::A -> ::B # A can only depend on B
 

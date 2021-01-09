@@ -25,7 +25,7 @@ module Mudguard
           def enumerate_files(project_path, patterns)
             project_path_name = Pathname.new(project_path)
             ruby_files = patterns.map { |p| File.join(project_path, p) }
-            Dir.glob(ruby_files).map do |f|
+            Dir.glob(ruby_files).select { |f| File.file?(f) }.map do |f|
               file_path_name = Pathname.new(f)
               diff_path = file_path_name.relative_path_from(project_path_name).to_s
               Mudguard::Domain::Source.new(location: File.join("./", diff_path),
