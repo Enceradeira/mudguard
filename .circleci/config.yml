@@ -34,3 +34,9 @@ jobs:
           format: progress
           label: Inspecting with Rubocop
       
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - linting
