@@ -4,6 +4,7 @@ AllCops:
     - 'bin/*'
     - 'spec/test_projects/**/*.rb'
     - 'spec/lib/domain/source_examples/*.rb'
+    - 'vendor/bundle/**/*'
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
