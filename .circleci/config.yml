@@ -33,6 +33,18 @@ jobs:
       - ruby/rubocop-check:
           format: progress
           label: Inspecting with Rubocop
+
+  testing:
+    docker:
+      - image: circleci/ruby:2.5.3-stretch-node
+    executor: ruby/default
+    steps:
+      - checkout
+      - run:
+          name: install bundler
+          command: gem install bundler:2.1.4
+      - ruby/install-deps
+      - ruby/rspec-test
       
 workflows:
   version: 2
@@ -40,3 +52,4 @@ workflows:
     jobs:
       - build
       - linting
+      - testing
