@@ -21,7 +21,7 @@ module Mudguard
               it "prints results" do
                 problem1 = "./c.rb:6 #{dependency_not_allowed('::B->::A::Klass')}"
                 problem2 = "./b.rb:6 #{dependency_not_allowed('::B->::A::Klass')}"
-                expect(messages).to eq([problem1, problem2, summary(3, 2)])
+                expect(messages).to match_array([problem1, problem2, summary(3, 2)])
               end
             end
 
