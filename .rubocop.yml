@@ -19,7 +19,7 @@ Style/Documentation:
     - 'spec/**/*.rb'
 
 Style/HashEachMethods:
-    Enabled: true
+  Enabled: true
 
 Style/HashTransformKeys:
   Enabled: true
@@ -30,3 +30,8 @@ Style/HashTransformValues:
 Layout/LineLength:
   Description: 'Limit lines to 100 characters.'
   Max: 100
+
+
+Lint/EmptyFile:
+  Exclude:
+    - 'spec/lib/infrastructure/persistence/project_repository_project/**/*.rb'

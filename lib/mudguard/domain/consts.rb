@@ -7,14 +7,7 @@ module Mudguard
     # Knows all constants of the project
     class Consts
       def initialize(sources:)
-        @consts = sources.flat_map(&:find_consts)
-                         .each_with_object({}) do |c, a|
-          path = split_hierarchy(c)
-          const_name = path.last
-          module_names = path.take(path.count - 1)
-          sub_module = module_names.reduce(a) { |h, m| h.key?(m) ? h[m] : h[m] = {} }
-          sub_module[const_name] = {} unless sub_module.key?(const_name)
-        end
+        @consts = sources.flat_map(&:find_consts).each_with_object({}, &method(:add_const))
       end
 
       def resolve(module_name, const_name)
@@ -33,6 +26,14 @@ module Mudguard
       end
 
       private
+
+      def add_const(const, all_consts)
+        path = split_hierarchy(const)
+        const_name = path.last
+        module_names = path.take(path.count - 1)
+        sub_module = module_names.reduce(all_consts) { |h, m| h.key?(m) ? h[m] : h[m] = {} }
+        sub_module[const_name] = {} unless sub_module.key?(const_name)
+      end
 
       SEPARATOR = "::"
 

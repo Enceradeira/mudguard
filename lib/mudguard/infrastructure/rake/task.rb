@@ -12,6 +12,8 @@ module Mudguard
       # Provides Mudguard Rake Tasks
       class Task < ::Rake::TaskLib
         def initialize(project_dir: Dir.pwd)
+          super()
+
           @project_dir = project_dir
 
           desc "Run Mudguard"

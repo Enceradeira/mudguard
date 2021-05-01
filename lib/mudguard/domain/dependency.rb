@@ -6,7 +6,7 @@ module Mudguard
     class Dependency
       attr_reader :location, :dependency
 
-      def initialize(location: nil, dependency:)
+      def initialize(dependency:, location: nil)
         @location = location
         @dependency = dependency
       end
