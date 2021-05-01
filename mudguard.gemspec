@@ -37,8 +37,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pry-doc", "~>1.0"
   spec.add_development_dependency "rake", "~>13.0"
   spec.add_development_dependency "rspec", "~> 3.9"
-  spec.add_development_dependency "rubocop", "~>0.80"
   spec.add_development_dependency "rspec-github"
+  spec.add_development_dependency "rubocop", "~>0.80"
 
   spec.add_dependency "parser", "~>2.7"
   spec.add_dependency "rake", "~> 13.0"
